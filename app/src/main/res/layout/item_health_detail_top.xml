@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/body_state_top_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/dividing_line" />
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:padding="2dp"
+        tools:ignore="RtlCompat" />
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@id/img"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:maxLength="5"
+            android:maxLines="1"
+            android:text="36.55"
+            android:textColor="@color/text_color_1"
+            android:textSize="30dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:textColor="@color/text_color_3"
+            android:textSize="15dp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/content"
+        android:textColor="@color/text_color_3"
+        tools:ignore="RtlCompat" />
+
+</RelativeLayout>

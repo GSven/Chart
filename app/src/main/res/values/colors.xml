@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="text_color_1">#333333</color>
+    <color name="text_color_2">#666666</color>
+    <color name="text_color_3">#999999</color>
+
+    <color name="yellow_rgb_253_202_78">#FDCA4E</color>
+    <color name="yellow_rgb_255_155_46">#FF9B2E</color>
+    <color name="violet_rgb_111_51_199">#6F33C7</color>
+    <color name="violet_rgb_147_118_205">#9376CD</color>
+    <color name="violet_rgb_185_101_255">#B965FF</color>
+    <color name="green_rgb_19_225_253">#13E1FD</color>
+    <color name="green_rgb_40_220_162">#28DCA2</color>
+    <color name="blue_rgba_24_261_255">#17A1FF</color>
+    <color name="red_rgb_255_127_87">#FF7F57</color>
+
+
+    <color name="yellow_sharder">#4DFDCA4E</color>
+    <color name="blue_sharder">#CC17A1FF</color>
+    <color name="violet_sharder">#4DB965FF</color>
+    <color name="red_sharder">#4DFA1E00</color>
+    <color name="green_sharder">#4D28DCA2</color>
+    <color name="alpha_sharder">#00000000</color>
+    <color name="alpha">#80000000</color>
+    <color name="alpha_1">#535353</color>
+    <color name="alpha_2">#5D535353</color>
+
+</resources>

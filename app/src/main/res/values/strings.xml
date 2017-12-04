@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Chart</string>
+
+    <!--保存的文件路径-->
+    <string name="save_cache_file_folder_root">/mnt/sdcard/chart/cache/</string>
+    <string name="save_pdf_file_folder">/mnt/sdcard/chart/cache/fujian/pdf/</string>
+    <string name="save_image_picasso_folder">/mnt/sdcard/chart/cache/fujian/picasso/image/</string>
+    <string name="save_image_file_folder">/mnt/sdcard/chart/cache/fujian/image/</string>
+    <string name="save_word_file_folder">/mnt/sdcard/chart/cache/fujian/word/</string>
+    <string name="save_other_file_folder">/mnt/sdcard/chart/cache/fujian/other/</string>
+    <string name="save_bug_message_folder">/mnt/sdcard/chart/cache/bug/</string>
+
+    <!--首页轮播图url-->
+    <string-array name="banner_urls">
+        <item>http://img06.tooopen.com/images/20170329/tooopen_sy_203589513656.jpg</item>
+        <item>http://img06.tooopen.com/images/20170316/tooopen_sy_202006455884.jpg</item>
+        <item>http://img06.tooopen.com/images/20160727/tooopen_sy_172703883491.jpg</item>
+        <item>http://img03.tooopen.com/images/20160706/tooopen_sy_169305625518.jpg</item>
+        <item>http://img06.tooopen.com/images/20160723/tooopen_sy_171427629275.jpg</item>
+        <item>http://img05.tooopen.com/images/20141225/sy_106447848191.jpg</item>
+        <item>http://img06.tooopen.com/images/20160913/tooopen_sy_178786212749.jpg</item>
+        <item>http://img06.tooopen.com/images/20160922/tooopen_sy_179739052216.jpg</item>
+        <item></item>
+    </string-array>
+
+    <string name="chart_histroy_data">历史数据</string>
+    <string name="chart_zhihu_data">智护数据</string>
+    <string name="string_bottom">已经看完所有数据啦 (｡･ω･)ﾉﾞ</string>
+
+    <string name="string_unit_xt">(mmol/l)</string>
+    <string name="string_unit_hb">(次/分)</string>
+    <string name="string_unit_bt">(℃)</string>
+    <string name="string_unit_press">(mmhg)</string>
+    <string name="string_unit_step">(步)</string>
+    <string name="string_unit_lccs">(次)</string>
+    <string name="string_unit_fen">(份)</string>
+    <string name="string_unit_ml">(ml)</string>
+
+    <string name="string_label_lccs">离床次数</string>
+    <string name="string_rjlc">日间离床</string>
+    <string name="string_hdxs">活动形式</string>
+    <string name="string_label_smzl">睡眠质量</string>
+    <string name="string_label_xt">血糖</string>
+    <string name="string_label_hb">心跳</string>
+    <string name="string_label_press">血压</string>
+    <string name="string_label_bt">体温</string>
+    <string name="string_label_step">步数</string>
+    <string name="string_label_eat">进餐</string>
+    <string name="string_label_drink">饮水</string>
+    <string name="string_charbar_sleep_4">熟睡</string>
+    <string name="string_charbar_sleep_3">普通</string>
+    <string name="string_charbar_sleep_2">浅眠</string>
+    <string name="string_label_smzl_bad">差</string>
+    <string name="string_label_smzl_good">好</string>
+    <string name="string_chart_unit_month">月</string>
+    <string name="string_label_press_hight">高压</string>
+    <string name="string_label_press_lower">低压</string>
+
+    <string-array name="diet_strings">
+        <item>食欲</item>
+        <item>吞咽</item>
+        <item>饮水量(ml)</item>
+        <item>进食量</item>
+    </string-array>
+
+    <string-array name="sleep_strings">
+        <item>离床次数(次)</item>
+        <item>安眠药</item>
+        <item>睡眠质量</item>
+    </string-array>
+
+    <string-array name="body_strings">
+        <item>血糖(mmol/L)</item>
+        <item>心跳(次/分)</item>
+        <item>血压(mmhg)</item>
+        <item>温度(℃)</item>
+    </string-array>
+
+    <string-array name="health_title_strings">
+        <item>心跳</item>
+        <item>血氧</item>
+        <item>收缩压</item>
+        <item>舒张压</item>
+        <item>血糖</item>
+        <item>体温</item>
+        <item>小腿围</item>
+        <item>体重</item>
+    </string-array>
+
+    <string-array name="health_unit_strings">
+        <item>次/分</item>
+        <item>%</item>
+        <item>mmHg</item>
+        <item>mmHg</item>
+        <item>mmol/L</item>
+        <item>℃</item>
+        <item>CM</item>
+        <item>KG</item>
+    </string-array>
+
+</resources>

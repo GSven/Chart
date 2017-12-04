@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_body"
+    android:descendantFocusability="blocksDescendants"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="0dp"
+    android:fillViewport="true"
+    android:focusable="false"
+    android:listSelector="@android:color/transparent"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_body_state_top_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_body_state_history_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"></LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_body_state_bottom_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
