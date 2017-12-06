@@ -1,6 +1,7 @@
 package com.sxt.chart.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.KeyguardManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -19,6 +21,7 @@ import com.sxt.chart.chart.BeizerCurveLine;
 import com.sxt.chart.chart.ChartBar;
 import com.sxt.chart.chart.ChartBean;
 import com.sxt.chart.chart.CircleProgressView;
+import com.sxt.chart.chart.LineOnScrollChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,11 +40,13 @@ public class MainActivity extends BaseActivity {
     private List<ChartBean> chartBeanList;
     private List<ChartBean> chartBeanList1;
     private ScrollView scrollView;
+    private LineOnScrollChangeListener onScrollChangeListener;
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setWindowStatusBarColor(this, R.color.colorPrimary);
         setContentView(R.layout.activity_main);
 
         KeyguardManager keyguardManager
@@ -55,12 +60,23 @@ public class MainActivity extends BaseActivity {
         viewPager = (CycleViewPager) findViewById(R.id.viewpager);
         scrollView = (ScrollView) findViewById(R.id.scrollview);
         bottomListRoot = (LinearLayout) findViewById(R.id.ll_bottom_list);
-
+        onScrollChangeListener = new LineOnScrollChangeListener();
+        scrollView.setOnScrollChangeListener(onScrollChangeListener);
 
         initViewPager();//轮播图
         initData();
-        drawLine();//曲线
         drawBar();//柱状图
+        drawLine();//曲线
+        drawLine();//曲线
+        drawLine();//曲线
+        drawLine();//曲线
+        drawLine();//曲线
+        drawLine();//曲线
+        drawLine();//曲线
+        for (int i = 0; i < 500; i++) {
+            drawBar();//柱状图
+        }
+
         drawCircleProgress();//圆形进度
     }
 
@@ -106,6 +122,7 @@ public class MainActivity extends BaseActivity {
                         new String[]{getString(R.string.string_label_smzl), getString(R.string.string_label_smzl_bad), getString(R.string.string_label_smzl_good)},
                         new int[]{lineColor[0], lineColor[1], lineColor[3]})
                 .start();
+        onScrollChangeListener.addLine(chartBar);
     }
 
     private void initData() {
@@ -148,7 +165,7 @@ public class MainActivity extends BaseActivity {
         }
         chartLine
                 .setMaxXNum(6)
-                .setScrollView(scrollView)
+
                 .setXYColor(R.color.text_color_3)
                 .setHintLineColor(R.color.text_color_3)
                 .setUnit(lineUnit[0]);
@@ -157,10 +174,25 @@ public class MainActivity extends BaseActivity {
         builder.builder(chartBeans, lineColor[0], shaderColor[0]);
 
         builder.build(chartLine);
+        //将当前曲线添加到ScrollView的滑动监听中
+        onScrollChangeListener.addLine(chartLine);
     }
 
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setWindowStatusBarColor(Activity activity, int colorResId) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = activity.getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(activity.getResources().getColor(colorResId));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.sxt.chart.chart;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,10 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.ScrollView;
 
 import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
@@ -67,8 +66,6 @@ public class ChartBar extends View {
      */
     private int[] labelColors;
     private long duration = 800;
-    private float animatedValue;
-    private ValueAnimator valueAnimator;
 
     private void init() {
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -312,34 +309,63 @@ public class ChartBar extends View {
         return (endX - startX) / 9;
     }
 
-
-    public ChartBar setScrollView(ScrollView scrollView) {
-
-        scrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                Log.i("sxt", "onScrollChange");
-                if (isCover(ChartBar.this)) {
-                    Log.i("sxt", "start");
-                    start();
-                }
-            }
-        });
-
-        return this;
-    }
-
     public void start() {
-        initAnimator();
+        if (isCover(ChartBar.this)) {
+            startAnimator();
+        } else {
+            this.post(new Runnable() {//可以避免页面未初始化完成造成的 空白
+                @Override
+                public void run() {
+                    if (isCover(ChartBar.this)) {
+                        startAnimator();
+                    }
+                }
+            });
+        }
     }
 
-    private void initAnimator() {
+    private boolean starting = false;
+    private boolean isFirst = true;
+    private float animatedValue;
+    private ValueAnimator valueAnimator;
+
+    private void startAnimator() {
+        if (!isFirst) return;//只能绘制一次
+        if (starting) {
+            return;
+        }
+        starting = true;
         valueAnimator = ValueAnimator.ofFloat(0, 1).setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 animatedValue = (float) valueAnimator.getAnimatedValue();
-                invalidate();
+                if (starting) {
+                    invalidate();
+                }
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                starting = false;
+                isFirst = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
         valueAnimator.start();

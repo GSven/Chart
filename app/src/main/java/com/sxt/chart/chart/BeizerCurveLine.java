@@ -19,9 +19,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ScrollView;
 
 import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
@@ -139,7 +140,7 @@ public class BeizerCurveLine extends View {
      * y轴的最大刻度
      */
     private boolean isShowFloat = false;
-    private ScrollView scrollView;
+    private Paint touchPaint;
 
     public BeizerCurveLine(Context context) {
         super(context);
@@ -193,6 +194,8 @@ public class BeizerCurveLine extends View {
 
         coverPath = new Path();
         fillPath = new Path();
+
+        touchPaint = new Paint(basePaint);
     }
 
     @Override
@@ -206,29 +209,52 @@ public class BeizerCurveLine extends View {
         }
     }
 
-    private void start() {
-        if (curveDataLists == null || curveDataLists.size() == 0 || curvePaintColors == null || curvePaintColors.size() == 0)
-            return;
-        if (startting) return;
-//        this.post(new Runnable() {
-//            @Override
-//            public void run() {
-        initPath();
-        if (isPlayAnimator) {
-            initListener();
-            initAnimator();
-            valueAnimator.start();
-            startting = true;
-        }
-        invalidate();
-//            }
-//        });
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+//        if (onTouch) {
+//            drawOnTouch(canvas);
+//        } else {
+        drawNoTouch(canvas);
+//        }
+    }
+
+    private float downX;
+    private float downY;
+    private float moveX;
+    private float moveY;
+    private boolean onTouch = false;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                onTouch = true;
+                downX = event.getX();
+                downY = event.getY();
+                if (moveX == 0 && moveY == 0) {//此时处于 用户首次触摸当前View
+                    moveX = downX;
+                    moveY = downY;
+                    invalidate();
+                }
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                onTouch = false;
+                invalidate();
+                break;
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    private void drawNoTouch(Canvas canvas) {
         //无论有没有数据 都要显示坐标轴线
         drawLabels(canvas);//画顶部的Label
         drawLines(canvas);//画横线
@@ -244,8 +270,20 @@ public class BeizerCurveLine extends View {
                 drawPoint(canvas);
             } else {
                 drawCurveLines(canvas);
+                if (mAnimatorValue >= 1) {
+                    canvas.save();//保存当前的状态
+                    Log.i("line", "save");
+                }
             }
         }
+    }
+
+    private void drawOnTouch(Canvas canvas) {
+
+        touchPaint.setColor(Color.GREEN);
+        touchPaint.setStrokeWidth(10);
+        canvas.restore();
+        canvas.drawPoint(downX, downY, touchPaint);
     }
 
     private void drawPoint(Canvas canvas) {
@@ -265,6 +303,7 @@ public class BeizerCurveLine extends View {
                 }
             }
         }
+        canvas.save();//保存之前的状态;
     }
 
     private void initPath() {
@@ -323,10 +362,8 @@ public class BeizerCurveLine extends View {
         return 0;
     }
 
-    private ValueAnimator valueAnimator;
-    private ValueAnimator.AnimatorUpdateListener mUpdateListener;
     private PathMeasure pathMeasureCover;
-    float curveLength;
+    private float curveLength;
 
     private void drawCurveLines(Canvas canvas) {
         if (pathList == null || pathList.size() == 0) return;
@@ -392,50 +429,6 @@ public class BeizerCurveLine extends View {
                 }
             }
         }
-    }
-
-    float mAnimatorValue;
-    private boolean startting = false;
-    private boolean over = false;
-
-    private void initListener() {
-        mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                // if (mAnimatorValue != 0.0)
-                mAnimatorValue = (float) animation.getAnimatedValue();
-                if (!over) {
-                    invalidate();
-                }
-            }
-        };
-    }
-
-    private void initAnimator() {
-        valueAnimator = ValueAnimator.ofFloat(0, 1).setDuration(duration);
-        valueAnimator.addUpdateListener(mUpdateListener);
-        valueAnimator.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                over = true;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
     }
 
     /**
@@ -759,20 +752,81 @@ public class BeizerCurveLine extends View {
         this.curveDataLists = curveDataLists;
         this.curvePaintColors = curvePaintColors;
         this.curveShaderColors = curveShaderColors;
+
+        start();
     }
 
-    public BeizerCurveLine setScrollView(ScrollView scrollView) {
-        this.scrollView = scrollView;
-        scrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
+    private boolean starting = false;
+    private boolean isFirst = true;
+    private float mAnimatorValue;
+    private ValueAnimator valueAnimator;
+
+    private void startDraw() {
+        if (curveDataLists == null || curveDataLists.size() == 0 || curvePaintColors == null || curvePaintColors.size() == 0)
+            return;
+        if (!isFirst) return;
+        if (starting) {
+            return;
+        }
+        starting = true;
+        initPath();
+        if (isPlayAnimator) {
+            startAnimator();
+        } else {
+            invalidate();
+        }
+    }
+
+    public void start() {
+        if (isCover(BeizerCurveLine.this)) {
+            startDraw();
+        } else {
+            this.post(new Runnable() {//可以避免页面未初始化完成造成的 空白
+                @Override
+                public void run() {//可以避免页面未初始化完成造成的 空白
+                    if (isCover(BeizerCurveLine.this)) {
+                        startDraw();
+                    }
+                }
+            });
+        }
+    }
+
+    private void startAnimator() {
+        valueAnimator = ValueAnimator.ofFloat(0, 1).setDuration(duration);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                if (isCover(BeizerCurveLine.this)) {
-                    start();
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mAnimatorValue = (float) animation.getAnimatedValue();
+                if (starting) {
+                    invalidate();
                 }
             }
         });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
 
-        return this;
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                starting = false;
+                isFirst = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        valueAnimator.start();
     }
 
     /**
@@ -789,5 +843,4 @@ public class BeizerCurveLine extends View {
         }
         return false;
     }
-
 }
