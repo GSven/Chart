@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -225,6 +226,7 @@ public class BeizerCurveLine extends View {
     private float downY = 0.0f;
     private float moveX = 0.0f;
     private float moveY = 0.0f;
+    private float startY0;
     private boolean onTouch = false;
 
     @Override
@@ -238,32 +240,39 @@ public class BeizerCurveLine extends View {
                 downY = event.getY();
                 moveX = downX;
                 moveY = downY;
+                startY0 = downY;
                 invalidate();
                 Log.i("line", "Down");
                 break;
             case MotionEvent.ACTION_MOVE:
                 moveX = event.getX();
                 moveY = event.getY();
-                if (moveX >= getLeft() && moveX <= getRight() && moveY <= getBottom() && moveY >= getTop()) {
+                if (moveX >= getLeft() && moveX <= getRight()) {
                     getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
-                    invalidate();
+
+                    if (Math.abs(moveY - startY0) >= 100) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    } else {
+                        invalidate();
+                    }
                 }
+                startY0 = moveY;
                 Log.i("line", "Move");
                 break;
             case MotionEvent.ACTION_UP:
                 onTouch = false;
                 moveX = event.getX();
                 moveY = event.getY();
-                postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        postInvalidate();
+                        invalidate();
                     }
                 }, 1000);
                 Log.i("line", "Up");
                 break;
         }
-        if (mAnimatorValue == 1.0) {
+        if (onTouch && mAnimatorValue == 1.0) {
             return true;
         } else if (super.onTouchEvent(event)) {
             return super.onTouchEvent(event);
@@ -271,6 +280,9 @@ public class BeizerCurveLine extends View {
             return super.onTouchEvent(event);
         }
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler();
 
     private void drawNoTouch(Canvas canvas) {
         //无论有没有数据 都要显示坐标轴线
@@ -296,10 +308,6 @@ public class BeizerCurveLine extends View {
     @SuppressLint("ResourceType")
     private void drawOnTouch(Canvas canvas) {
 
-        Paint paint = new Paint(touchPaint);
-        paint.setStrokeWidth(dip2px(8.5f));
-        paint.setColor(Color.BLACK);
-
         int index = (int) ((moveX - startX) / getDx());
         float y = curveDataLists.get(0).get(index).y;
         float dy0 = (startY - endY) / hintLinesNum;
@@ -310,6 +318,18 @@ public class BeizerCurveLine extends View {
         float y1 = startY - y * dy;
         canvas.drawLine(x1, startY, x1, endY, touchPaint);//辅助线 Y
         canvas.drawLine(startX + 2 * basePadding, y1, endX, y1, touchPaint);//辅助线 X
+
+        //画指示点
+        Paint paint = new Paint(touchPaint);
+//        int[] colors = {Color.BLACK, Color.WHITE};
+//        paint.setShader(new RadialGradient(x1, y1, 20, colors, null, Shader.TileMode.CLAMP));
+
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(dip2px(9f));
+        canvas.drawPoint(x1, y1, paint);//画圆点
+
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(dip2px(7f));
         canvas.drawPoint(x1, y1, paint);//画圆点
     }
 
@@ -868,5 +888,12 @@ public class BeizerCurveLine extends View {
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (handler != null) handler.removeCallbacksAndMessages(null);
+        if (valueAnimator != null && valueAnimator.isRunning()) valueAnimator.cancel();
+        super.onDetachedFromWindow();
     }
 }

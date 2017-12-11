@@ -63,18 +63,17 @@ public class MainActivity extends BaseActivity {
         onScrollChangeListener = new LineOnScrollChangeListener();
         scrollView.setOnScrollChangeListener(onScrollChangeListener);
 
+//        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+//        startActivity(intent);
+
         initViewPager();//轮播图
         initData();
-        drawBar();//柱状图
-        drawLine();//曲线
-        drawLine();//曲线
-        drawLine();//曲线
-        drawLine();//曲线
-        drawLine();//曲线
-        drawLine();//曲线
-        drawLine();//曲线
-        for (int i = 0; i < 500; i++) {
-            drawBar();//柱状图
+        for (int i = 0; i < 100; i++) {
+            if (i % 2 == 0) {
+                drawBar();//柱状图
+            } else {
+                drawLine();//曲线
+            }
         }
 
         drawCircleProgress();//圆形进度
