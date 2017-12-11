@@ -2,6 +2,7 @@ package com.sxt.chart.chart;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -195,7 +196,9 @@ public class BeizerCurveLine extends View {
         coverPath = new Path();
         fillPath = new Path();
 
-        touchPaint = new Paint(basePaint);
+        touchPaint = new Paint(hintPaint);
+        touchPaint.setStyle(Paint.Style.FILL);
+        touchPaint.setColor(Color.BLACK);
     }
 
     @Override
@@ -211,19 +214,17 @@ public class BeizerCurveLine extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-//        if (onTouch) {
-//            drawOnTouch(canvas);
-//        } else {
         drawNoTouch(canvas);
-//        }
+        if (onTouch && mAnimatorValue == 1.0) {//曲线绘制完成之后才能进行触摸绘制
+            drawOnTouch(canvas);
+        }
+        super.onDraw(canvas);
     }
 
-    private float downX;
-    private float downY;
-    private float moveX;
-    private float moveY;
+    private float downX = 0.0f;
+    private float downY = 0.0f;
+    private float moveX = 0.0f;
+    private float moveY = 0.0f;
     private boolean onTouch = false;
 
     @Override
@@ -235,23 +236,40 @@ public class BeizerCurveLine extends View {
                 onTouch = true;
                 downX = event.getX();
                 downY = event.getY();
-                if (moveX == 0 && moveY == 0) {//此时处于 用户首次触摸当前View
-                    moveX = downX;
-                    moveY = downY;
-                    invalidate();
-                }
-
+                moveX = downX;
+                moveY = downY;
+                invalidate();
+                Log.i("line", "Down");
                 break;
             case MotionEvent.ACTION_MOVE:
-                invalidate();
+                moveX = event.getX();
+                moveY = event.getY();
+                if (moveX >= getLeft() && moveX <= getRight() && moveY <= getBottom() && moveY >= getTop()) {
+                    getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
+                    invalidate();
+                }
+                Log.i("line", "Move");
                 break;
             case MotionEvent.ACTION_UP:
                 onTouch = false;
-                invalidate();
+                moveX = event.getX();
+                moveY = event.getY();
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        postInvalidate();
+                    }
+                }, 1000);
+                Log.i("line", "Up");
                 break;
         }
-
-        return super.onTouchEvent(event);
+        if (mAnimatorValue == 1.0) {
+            return true;
+        } else if (super.onTouchEvent(event)) {
+            return super.onTouchEvent(event);
+        } else {
+            return super.onTouchEvent(event);
+        }
     }
 
     private void drawNoTouch(Canvas canvas) {
@@ -268,22 +286,31 @@ public class BeizerCurveLine extends View {
             List<ChartBean> chartBeanList = curveDataLists.get(i);
             if (chartBeanList.size() <= 1) {//如果只有一条数据 就 drawPoint
                 drawPoint(canvas);
+                canvas.save();
             } else {
                 drawCurveLines(canvas);
-                if (mAnimatorValue >= 1) {
-                    canvas.save();//保存当前的状态
-                    Log.i("line", "save");
-                }
             }
         }
     }
 
+    @SuppressLint("ResourceType")
     private void drawOnTouch(Canvas canvas) {
 
-        touchPaint.setColor(Color.GREEN);
-        touchPaint.setStrokeWidth(10);
-        canvas.restore();
-        canvas.drawPoint(downX, downY, touchPaint);
+        Paint paint = new Paint(touchPaint);
+        paint.setStrokeWidth(dip2px(8.5f));
+        paint.setColor(Color.BLACK);
+
+        int index = (int) ((moveX - startX) / getDx());
+        float y = curveDataLists.get(0).get(index).y;
+        float dy0 = (startY - endY) / hintLinesNum;
+        float maxValue = calculateMaxValueOfY(); //计算最大值
+        float dy = (dy0 * (hintLinesNum - 1)) / (maxValue <= 0 ? hintLinesNum - 1 : maxValue);
+
+        float x1 = curveXo + index * getDx();
+        float y1 = startY - y * dy;
+        canvas.drawLine(x1, startY, x1, endY, touchPaint);//辅助线 Y
+        canvas.drawLine(startX + 2 * basePadding, y1, endX, y1, touchPaint);//辅助线 X
+        canvas.drawPoint(x1, y1, paint);//画圆点
     }
 
     private void drawPoint(Canvas canvas) {
@@ -303,7 +330,6 @@ public class BeizerCurveLine extends View {
                 }
             }
         }
-        canvas.save();//保存之前的状态;
     }
 
     private void initPath() {
