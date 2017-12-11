@@ -25,6 +25,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
@@ -226,8 +227,16 @@ public class BeizerCurveLine extends View {
     private float downY = 0.0f;
     private float moveX = 0.0f;
     private float moveY = 0.0f;
+    private float startX0;
     private float startY0;
     private boolean onTouch = false;
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+
+        Toast.makeText(getContext(), "Long", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -235,50 +244,66 @@ public class BeizerCurveLine extends View {
         switch (event.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
-                onTouch = true;
-                downX = event.getX();
-                downY = event.getY();
-                moveX = downX;
-                moveY = downY;
-                startY0 = downY;
-                invalidate();
+
+                if (mAnimatorValue == 1.0) {//曲线绘制完成才能绘制辅助线
+                    onTouch = true;
+                    downX = event.getX();
+                    downY = event.getY();
+                    moveX = downX;
+                    moveY = downY;
+                    startX0 = downX;
+                    startY0 = downY;
+                    invalidate();
+                }
+
                 Log.i("line", "Down");
                 break;
             case MotionEvent.ACTION_MOVE:
-                moveX = event.getX();
-                moveY = event.getY();
-                if (moveX >= getLeft() && moveX <= getRight()) {
-                    getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
+                if (mAnimatorValue == 1.0) {
+                    moveX = event.getX();
+                    moveY = event.getY();
+                    if (moveX >= getLeft() && moveX <= getRight() && moveY >= getTop() && moveY <= getBottom()) {
 
-                    if (Math.abs(moveY - startY0) >= 100) {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                    } else {
+                        if (Math.abs(moveY - downY) >= (getBottom() - getTop()) / 2) {
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                        } else {
+                            getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
+                        }
                         invalidate();
+
+                    } else {
+                        onTouch = false;
+                        postDelayedInvalidate();
                     }
+//                    startY0 = moveY;
+//                    startX0 = moveX;
                 }
-                startY0 = moveY;
+
                 Log.i("line", "Move");
                 break;
             case MotionEvent.ACTION_UP:
                 onTouch = false;
                 moveX = event.getX();
                 moveY = event.getY();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        invalidate();
-                    }
-                }, 1000);
+                postDelayedInvalidate();
+
                 Log.i("line", "Up");
                 break;
         }
         if (onTouch && mAnimatorValue == 1.0) {
             return true;
-        } else if (super.onTouchEvent(event)) {
-            return super.onTouchEvent(event);
         } else {
             return super.onTouchEvent(event);
         }
+    }
+
+    private void postDelayedInvalidate() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        }, 1000);
     }
 
     @SuppressLint("HandlerLeak")
@@ -308,7 +333,9 @@ public class BeizerCurveLine extends View {
     @SuppressLint("ResourceType")
     private void drawOnTouch(Canvas canvas) {
 
+        //这里获取int整型数值 ，刚好与数据源的索引吻合 ，如果数据长度过短，可能会索引越界，可以对index进行判断
         int index = (int) ((moveX - startX) / getDx());
+        if (index >= curveDataLists.get(0).size()) index = curveDataLists.get(0).size() - 1;
         float y = curveDataLists.get(0).get(index).y;
         float dy0 = (startY - endY) / hintLinesNum;
         float maxValue = calculateMaxValueOfY(); //计算最大值
@@ -321,15 +348,12 @@ public class BeizerCurveLine extends View {
 
         //画指示点
         Paint paint = new Paint(touchPaint);
-//        int[] colors = {Color.BLACK, Color.WHITE};
-//        paint.setShader(new RadialGradient(x1, y1, 20, colors, null, Shader.TileMode.CLAMP));
-
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(dip2px(9f));
+        paint.setStrokeWidth(dip2px(9.5f));
         canvas.drawPoint(x1, y1, paint);//画圆点
 
         paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(dip2px(7f));
+        paint.setStrokeWidth(dip2px(6.5f));
         canvas.drawPoint(x1, y1, paint);//画圆点
     }
 

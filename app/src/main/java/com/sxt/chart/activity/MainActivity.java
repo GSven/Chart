@@ -136,8 +136,8 @@ public class MainActivity extends BaseActivity {
         chartBeanList.add(new ChartBean("2", 10));
         chartBeanList.add(new ChartBean("3", 80));
         chartBeanList.add(new ChartBean("4", 10));
-        chartBeanList.add(new ChartBean("4", 30));
-        chartBeanList.add(new ChartBean("4", 0));
+        chartBeanList.add(new ChartBean("5", 30));
+        chartBeanList.add(new ChartBean("6 ", 0));
 
         chartBeanList1 = new ArrayList<>();
         chartBeanList1.add(new ChartBean("9月", 20));
@@ -145,9 +145,8 @@ public class MainActivity extends BaseActivity {
         chartBeanList1.add(new ChartBean("2", 58));
         chartBeanList1.add(new ChartBean("3", 100));
         chartBeanList1.add(new ChartBean("4", 60));
-        chartBeanList1.add(new ChartBean("5", 40));
-        chartBeanList1.add(new ChartBean("6", 77));
-        chartBeanList1.add(new ChartBean("6", 30));
+        chartBeanList1.add(new ChartBean("5", 1));
+        chartBeanList1.add(new ChartBean("6", 1));
     }
 
     private void drawLine() {
