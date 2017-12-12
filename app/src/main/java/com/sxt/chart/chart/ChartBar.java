@@ -2,6 +2,7 @@ package com.sxt.chart.chart;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -11,11 +12,14 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.sxt.chart.R;
@@ -30,6 +34,7 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class ChartBar extends View {
 
+    private Paint touchPaint;
 
     public ChartBar(Context context) {
         super(context);
@@ -89,6 +94,10 @@ public class ChartBar extends View {
 
         hintPaint = new Paint(basePaint);
         hintPaint.setStrokeWidth(0.5f);
+
+        touchPaint = new Paint(hintPaint);
+        touchPaint.setStyle(Paint.Style.FILL);
+        touchPaint.setColor(Color.BLACK);
     }
 
     @Override
@@ -109,7 +118,107 @@ public class ChartBar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        drawNoTouch(canvas);
+        if (onTouch && animatedValue == 1.0) {//曲线绘制完成之后才能进行触摸绘制
+            drawOnTouch(canvas);
+        }
         super.onDraw(canvas);
+    }
+
+    private void drawOnTouch(Canvas canvas) {
+        //这里获取int整型数值 ，刚好与数据源的索引吻合 ，如果数据长度过短，可能会索引越界，可以对index进行判断
+        int index = (int) ((moveX - startX) / getDx());
+        if (index >= datas.size()) index = datas.size() - 1;
+        float y = datas.get(index).y;
+
+        float dx = getDx();
+        float dy = (startY - endY - basePadding) / 100;
+
+        float x1 = startX + (index + 0.5f) * dx;
+        float y1 = startY - y * dy;
+        canvas.drawLine(x1, startY, x1, endY, touchPaint);//辅助线 Y
+        canvas.drawLine(startX + 2 * basePadding, y1, endX, y1, touchPaint);//辅助线 X
+
+        //画指示点
+        Paint paint = new Paint(touchPaint);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(dip2px(9.5f));
+        canvas.drawPoint(x1, y1, paint);//画圆点
+
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(dip2px(6.5f));
+        canvas.drawPoint(x1, y1, paint);//画圆点
+    }
+
+
+    private float downX = 0.0f;
+    private float downY = 0.0f;
+    private float moveX = 0.0f;
+    private float moveY = 0.0f;
+    private boolean onTouch = false;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+
+                if (animatedValue == 1.0) {//曲线绘制完成才能绘制辅助线
+                    onTouch = true;
+                    downX = event.getX();
+                    downY = event.getY();
+                    moveX = downX;
+                    moveY = downY;
+                }
+
+                Log.i("line", "Down");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (animatedValue == 1.0) {
+                    moveX = event.getX();
+                    moveY = event.getY();
+                    if (moveX >= getLeft() && moveX <= getRight() && moveY >= getTop() && moveY <= getBottom()) {
+                        getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
+                        invalidate();
+
+                    } else {
+                        postDelayedInvalidate();
+                    }
+                }
+
+                Log.i("line", "Move");
+                break;
+            case MotionEvent.ACTION_UP:
+                moveX = event.getX();
+                moveY = event.getY();
+                postDelayedInvalidate();
+
+                Log.i("line", "Up");
+                break;
+        }
+        if (onTouch && animatedValue == 1.0) {
+            return true;
+        } else {
+            return super.onTouchEvent(event);
+        }
+    }
+
+    public void postDelayedInvalidate() {
+        onTouch = false;//置为响应触摸操作的绘制
+        getParent().requestDisallowInterceptTouchEvent(false);//离开绘制区域,拦截触摸事件
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        }, 1000);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler();
+
+    private void drawNoTouch(Canvas canvas) {
         drawLabels(canvas);//画顶部Label
         drawLine(canvas);//画横线
         if (datas == null || datas.size() == 0 || xyPaint == null) return;

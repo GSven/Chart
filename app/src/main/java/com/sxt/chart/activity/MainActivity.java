@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -68,7 +69,8 @@ public class MainActivity extends BaseActivity {
 
         initViewPager();//轮播图
         initData();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
+//            drawLine();//曲线
             if (i % 2 == 0) {
                 drawBar();//柱状图
             } else {
@@ -147,6 +149,12 @@ public class MainActivity extends BaseActivity {
         chartBeanList1.add(new ChartBean("4", 60));
         chartBeanList1.add(new ChartBean("5", 1));
         chartBeanList1.add(new ChartBean("6", 1));
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        return super.dispatchTouchEvent(ev);
     }
 
     private void drawLine() {

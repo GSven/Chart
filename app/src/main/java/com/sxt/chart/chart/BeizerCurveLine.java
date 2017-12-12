@@ -25,7 +25,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
@@ -227,16 +226,7 @@ public class BeizerCurveLine extends View {
     private float downY = 0.0f;
     private float moveX = 0.0f;
     private float moveY = 0.0f;
-    private float startX0;
-    private float startY0;
     private boolean onTouch = false;
-
-    @Override
-    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
-        super.setOnLongClickListener(l);
-
-        Toast.makeText(getContext(), "Long", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -251,9 +241,6 @@ public class BeizerCurveLine extends View {
                     downY = event.getY();
                     moveX = downX;
                     moveY = downY;
-                    startX0 = downX;
-                    startY0 = downY;
-                    invalidate();
                 }
 
                 Log.i("line", "Down");
@@ -263,16 +250,10 @@ public class BeizerCurveLine extends View {
                     moveX = event.getX();
                     moveY = event.getY();
                     if (moveX >= getLeft() && moveX <= getRight() && moveY >= getTop() && moveY <= getBottom()) {
-
-                        if (Math.abs(moveY - downY) >= (getBottom() - getTop()) / 2) {
-                            getParent().requestDisallowInterceptTouchEvent(false);
-                        } else {
-                            getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
-                        }
+                        getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
                         invalidate();
 
                     } else {
-                        onTouch = false;
                         postDelayedInvalidate();
                     }
                 }
@@ -280,11 +261,9 @@ public class BeizerCurveLine extends View {
                 Log.i("line", "Move");
                 break;
             case MotionEvent.ACTION_UP:
-                onTouch = false;
                 moveX = event.getX();
                 moveY = event.getY();
                 postDelayedInvalidate();
-                getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
 
                 Log.i("line", "Up");
                 break;
@@ -296,7 +275,9 @@ public class BeizerCurveLine extends View {
         }
     }
 
-    private void postDelayedInvalidate() {
+    public void postDelayedInvalidate() {
+        onTouch = false;//置为响应触摸操作的绘制
+        getParent().requestDisallowInterceptTouchEvent(false);//离开绘制区域,拦截触摸事件
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
