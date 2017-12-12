@@ -33,7 +33,7 @@ public class LineOnScrollChangeListener implements View.OnScrollChangeListener {
     }
 
     @Override
-    public void onScrollChange(View view, int x, int y, int oldX, int oldY) {
+    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
         if (lines != null && lines.size() > 0) {
             for (int j = 0; j < lines.size(); j++) {
                 if (lines.get(j) instanceof BeizerCurveLine) {

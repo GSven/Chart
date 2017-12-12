@@ -226,6 +226,8 @@ public class BeizerCurveLine extends View {
     private float downY = 0.0f;
     private float moveX = 0.0f;
     private float moveY = 0.0f;
+    private float startX0 = 0.0f;
+    private float startY0 = 0.0f;
     private boolean onTouch = false;
 
     @Override
@@ -241,6 +243,8 @@ public class BeizerCurveLine extends View {
                     downY = event.getY();
                     moveX = downX;
                     moveY = downY;
+                    startX0 = moveX;
+                    startY0 = moveY;
                 }
 
                 Log.i("line", "Down");
@@ -252,7 +256,6 @@ public class BeizerCurveLine extends View {
                     if (moveX >= getLeft() && moveX <= getRight() && moveY >= getTop() && moveY <= getBottom()) {
                         getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
                         invalidate();
-
                     } else {
                         postDelayedInvalidate();
                     }
@@ -263,6 +266,8 @@ public class BeizerCurveLine extends View {
             case MotionEvent.ACTION_UP:
                 moveX = event.getX();
                 moveY = event.getY();
+                startX0 = moveX;
+                startY0 = moveY;
                 postDelayedInvalidate();
 
                 Log.i("line", "Up");

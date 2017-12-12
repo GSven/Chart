@@ -7,12 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
-import android.view.MotionEvent;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import com.sxt.banner.library.CycleViewPager;
 import com.sxt.banner.library.adapter.BaseCyclePagerAdapter;
@@ -39,8 +38,7 @@ public class MainActivity extends BaseActivity {
     int[] shaderColor;
     private LinearLayout bottomListRoot;
     private List<ChartBean> chartBeanList;
-    private List<ChartBean> chartBeanList1;
-    private ScrollView scrollView;
+    private NestedScrollView scrollView;
     private LineOnScrollChangeListener onScrollChangeListener;
 
     @SuppressLint("MissingPermission")
@@ -59,7 +57,7 @@ public class MainActivity extends BaseActivity {
         lock.disableKeyguard();
 
         viewPager = (CycleViewPager) findViewById(R.id.viewpager);
-        scrollView = (ScrollView) findViewById(R.id.scrollview);
+        scrollView =  findViewById(R.id.scrollview);
         bottomListRoot = (LinearLayout) findViewById(R.id.ll_bottom_list);
         onScrollChangeListener = new LineOnScrollChangeListener();
         scrollView.setOnScrollChangeListener(onScrollChangeListener);
@@ -118,7 +116,7 @@ public class MainActivity extends BaseActivity {
         final ChartBar chartBar = (ChartBar) barView.findViewById(R.id.chartbar);
         //设置柱状图的数据源
         chartBar
-                .setRectData(chartBeanList1)
+                .setRectData(chartBeanList)
                 .setLabels(
                         new String[]{getString(R.string.string_label_smzl), getString(R.string.string_label_smzl_bad), getString(R.string.string_label_smzl_good)},
                         new int[]{lineColor[0], lineColor[1], lineColor[3]})
@@ -134,27 +132,12 @@ public class MainActivity extends BaseActivity {
 
         chartBeanList = new ArrayList<>();
         chartBeanList.add(new ChartBean("9月", 20));
-        chartBeanList.add(new ChartBean("1", 60));
-        chartBeanList.add(new ChartBean("2", 10));
-        chartBeanList.add(new ChartBean("3", 80));
-        chartBeanList.add(new ChartBean("4", 10));
-        chartBeanList.add(new ChartBean("5", 30));
-        chartBeanList.add(new ChartBean("6 ", 0));
-
-        chartBeanList1 = new ArrayList<>();
-        chartBeanList1.add(new ChartBean("9月", 20));
-        chartBeanList1.add(new ChartBean("1", 80));
-        chartBeanList1.add(new ChartBean("2", 58));
-        chartBeanList1.add(new ChartBean("3", 100));
-        chartBeanList1.add(new ChartBean("4", 60));
-        chartBeanList1.add(new ChartBean("5", 1));
-        chartBeanList1.add(new ChartBean("6", 1));
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-
-        return super.dispatchTouchEvent(ev);
+        chartBeanList.add(new ChartBean("1", 80));
+        chartBeanList.add(new ChartBean("2", 58));
+        chartBeanList.add(new ChartBean("3", 100));
+        chartBeanList.add(new ChartBean("4", 20));
+        chartBeanList.add(new ChartBean("5", 70));
+        chartBeanList.add(new ChartBean("6", 10));
     }
 
     private void drawLine() {
@@ -165,8 +148,8 @@ public class MainActivity extends BaseActivity {
         BeizerCurveLine.CurveLineBuilder builder = new BeizerCurveLine.CurveLineBuilder();
         List<ChartBean> chartBeans = new ArrayList<>();
 
-        for (int y = 0; y < chartBeanList1.size(); y++) {
-            ChartBean chartBean = chartBeanList1.get(y);
+        for (int y = 0; y < chartBeanList.size(); y++) {
+            ChartBean chartBean = chartBeanList.get(y);
             chartBeans.add(new ChartBean(chartBean.x, chartLine.parseFloat(String.valueOf(chartBean.y))));
         }
         chartLine
