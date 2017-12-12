@@ -275,8 +275,6 @@ public class BeizerCurveLine extends View {
                         onTouch = false;
                         postDelayedInvalidate();
                     }
-//                    startY0 = moveY;
-//                    startX0 = moveX;
                 }
 
                 Log.i("line", "Move");
@@ -286,6 +284,7 @@ public class BeizerCurveLine extends View {
                 moveX = event.getX();
                 moveY = event.getY();
                 postDelayedInvalidate();
+                getParent().requestDisallowInterceptTouchEvent(true);//绘制区域内 允许子view响应触摸事件
 
                 Log.i("line", "Up");
                 break;

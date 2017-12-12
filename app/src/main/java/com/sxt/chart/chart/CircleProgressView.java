@@ -23,6 +23,7 @@ import java.math.MathContext;
 /**
  * Created by sxt on 2017/7/13.
  */
+@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class CircleProgressView extends View {
 
     /**
@@ -105,6 +106,7 @@ public class CircleProgressView extends View {
             radius = (endX - startX) / 4;
         }
     }
+
 
     public void setProgress(int progress, int maxValue, String subTitle) {
         this.progress = progress;
@@ -214,6 +216,7 @@ public class CircleProgressView extends View {
         };
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void initAnimator() {
         valueAnimator = ValueAnimator.ofFloat(0, 1f).setDuration(duration);
         valueAnimator.addUpdateListener(mUpdateListener);
