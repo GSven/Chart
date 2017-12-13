@@ -26,7 +26,9 @@ import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sxt on 2017/7/13.
@@ -71,6 +73,7 @@ public class ChartBar extends View {
      */
     private int[] labelColors;
     private long duration = 800;
+    private Map<Integer, Integer> touchColors = new HashMap<>();
 
     private void init() {
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -97,7 +100,7 @@ public class ChartBar extends View {
 
         touchPaint = new Paint(hintPaint);
         touchPaint.setStyle(Paint.Style.FILL);
-        touchPaint.setColor(Color.BLACK);
+        touchPaint.setColor(ContextCompat.getColor(getContext(), R.color.alpha_2));
     }
 
     @Override
@@ -134,20 +137,29 @@ public class ChartBar extends View {
         float dx = getDx();
         float dy = (startY - endY - basePadding) / 100;
 
-        float x1 = startX + (index + 0.5f) * dx;
+        float x0 = startX + index * dx;
+        float x1 = x0 + 0.5f * dx;
         float y1 = startY - y * dy;
-        canvas.drawLine(x1, startY, x1, endY, touchPaint);//辅助线 Y
-        canvas.drawLine(startX + 2 * basePadding, y1, endX, y1, touchPaint);//辅助线 X
+
+        //画矩形
+        canvas.drawRect(x0, y1, x0 + dx, startY, touchPaint);
+        Paint p = new Paint(touchPaint);
+        p.setTextSize(dip2px(15));
+        p.setColor(ContextCompat.getColor(getContext(), touchColors.get(index)));
+        canvas.drawText(String.valueOf(y), x1, y1 - basePadding / 2, p);
+
+//        canvas.drawLine(x1, startY, x1, endY, touchPaint);//辅助线 Y
+//        canvas.drawLine(startX + 2 * basePadding, y1, endX, y1, touchPaint);//辅助线 X
 
         //画指示点
-        Paint paint = new Paint(touchPaint);
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(dip2px(9.5f));
-        canvas.drawPoint(x1, y1, paint);//画圆点
-
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(dip2px(6.5f));
-        canvas.drawPoint(x1, y1, paint);//画圆点
+//        Paint paint = new Paint(touchPaint);
+//        paint.setColor(Color.WHITE);
+//        paint.setStrokeWidth(dip2px(9.5f));
+//        canvas.drawPoint(x1, y1, paint);//画圆点
+//
+//        paint.setColor(Color.BLACK);
+//        paint.setStrokeWidth(dip2px(6.5f));
+//        canvas.drawPoint(x1, y1, paint);//画圆点
     }
 
 
@@ -307,12 +319,15 @@ public class ChartBar extends View {
         for (int i = 0; i < datas.size(); i++) {
             RectF rectf = new RectF(startX + dx * i, startY - datas.get(i).y * dy * animatedValue, startX + dx * (i + 1), startY);
             rectPaint = new Paint(basePaint);
-            if (datas.get(i).y > 90) {
+            if (datas.get(i).y > 90 || datas.get(i).y <= 10) {
                 rectPaint.setColor(ContextCompat.getColor(getContext(), labelColors[2]));
+                touchColors.put(i, labelColors[2]);
             } else if (datas.get(i).y >= 60) {
                 rectPaint.setColor(ContextCompat.getColor(getContext(), labelColors[1]));
+                touchColors.put(i, labelColors[1]);
             } else {
                 rectPaint.setColor(ContextCompat.getColor(getContext(), labelColors[0]));
+                touchColors.put(i, labelColors[0]);
             }
             canvas.drawRect(rectf, rectPaint);
         }

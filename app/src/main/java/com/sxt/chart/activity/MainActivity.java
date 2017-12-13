@@ -37,6 +37,7 @@ public class MainActivity extends BaseActivity {
     int[] lineColor;
     int[] shaderColor;
     private LinearLayout bottomListRoot;
+    private List<ChartBean> chartBeanList0;
     private List<ChartBean> chartBeanList;
     private NestedScrollView scrollView;
     private LineOnScrollChangeListener onScrollChangeListener;
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity {
         lock.disableKeyguard();
 
         viewPager = (CycleViewPager) findViewById(R.id.viewpager);
-        scrollView =  findViewById(R.id.scrollview);
+        scrollView = findViewById(R.id.scrollview);
         bottomListRoot = (LinearLayout) findViewById(R.id.ll_bottom_list);
         onScrollChangeListener = new LineOnScrollChangeListener();
         scrollView.setOnScrollChangeListener(onScrollChangeListener);
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity {
         final ChartBar chartBar = (ChartBar) barView.findViewById(R.id.chartbar);
         //设置柱状图的数据源
         chartBar
-                .setRectData(chartBeanList)
+                .setRectData(chartBeanList0)
                 .setLabels(
                         new String[]{getString(R.string.string_label_smzl), getString(R.string.string_label_smzl_bad), getString(R.string.string_label_smzl_good)},
                         new int[]{lineColor[0], lineColor[1], lineColor[3]})
@@ -138,6 +139,18 @@ public class MainActivity extends BaseActivity {
         chartBeanList.add(new ChartBean("4", 20));
         chartBeanList.add(new ChartBean("5", 70));
         chartBeanList.add(new ChartBean("6", 10));
+
+
+        chartBeanList0 = new ArrayList<>();
+        chartBeanList0.add(new ChartBean("9月", 20));
+        chartBeanList0.add(new ChartBean("1", 80));
+        chartBeanList0.add(new ChartBean("2", 58));
+        chartBeanList0.add(new ChartBean("3", 100));
+        chartBeanList0.add(new ChartBean("4", 20));
+        chartBeanList0.add(new ChartBean("5", 70));
+        chartBeanList0.add(new ChartBean("6", 10));
+        chartBeanList0.add(new ChartBean("7", 30));
+        chartBeanList0.add(new ChartBean("8", 5));
     }
 
     private void drawLine() {
