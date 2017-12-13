@@ -142,7 +142,14 @@ public class BeizerCurveLine extends View {
      * y轴的最大刻度
      */
     private boolean isShowFloat = false;
+    /**
+     * 触摸操作的画笔
+     */
     private Paint touchPaint;
+    /**
+     * 用于触摸时 , 顶部显示区域的边界值
+     */
+    private float[] tool = new float[4];
 
     public BeizerCurveLine(Context context) {
         super(context);
@@ -207,7 +214,7 @@ public class BeizerCurveLine extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
             startX = getPaddingLeft() + basePadding;
-            endX = getMeasuredWidth() - getPaddingRight();
+            endX = getMeasuredWidth() - getPaddingRight()-basePadding;
             startY = getMeasuredHeight() - getPaddingBottom() - basePadding * 3;
             endY = getPaddingTop() + basePadding * 4;
         }
@@ -340,6 +347,17 @@ public class BeizerCurveLine extends View {
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(dip2px(6.5f));
         canvas.drawPoint(x1, y1, paint);//画圆点
+
+        //画指示数据
+        Paint p = new Paint(touchPaint);
+        p.setColor(Color.BLACK);
+        p.setTextAlign(Paint.Align.CENTER);
+        p.setTextSize(dip2px(15));
+        if (isShowFloat) {
+            canvas.drawText(String.valueOf(y), x1, y1 - basePadding / 2, p);
+        } else {
+            canvas.drawText(String.valueOf((int) y), x1, y1 - basePadding / 2, p);
+        }
     }
 
     private void drawPoint(Canvas canvas) {

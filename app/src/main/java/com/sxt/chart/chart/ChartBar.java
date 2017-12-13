@@ -36,8 +36,6 @@ import java.util.Map;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class ChartBar extends View {
 
-    private Paint touchPaint;
-
     public ChartBar(Context context) {
         super(context);
         init();
@@ -73,6 +71,13 @@ public class ChartBar extends View {
      */
     private int[] labelColors;
     private long duration = 800;
+    /**
+     * 触摸操作的画笔
+     */
+    private Paint touchPaint;
+    /**
+     * 用于存储对应的触摸柱状图的颜色
+     */
     private Map<Integer, Integer> touchColors = new HashMap<>();
 
     private void init() {
