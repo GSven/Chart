@@ -22,7 +22,7 @@ public class WifiAdapter extends BaseAdapter {
     private List<ScanResult> data;
     private Context context;
 
-    public WifiAdapter(List<ScanResult> data, Context context) {
+    public WifiAdapter(Context context, List<ScanResult> data) {
         this.data = data;
         this.context = context;
     }
@@ -46,7 +46,7 @@ public class WifiAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_wifi, viewGroup);
+            view = LayoutInflater.from(context).inflate(R.layout.item_wifi, viewGroup,false);
             holder = new ViewHolder();
             holder.wifiRoot = view.findViewById(R.id.wifi_root);
             holder.wifiLine = view.findViewById(R.id.wifi_line);
