@@ -12,10 +12,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.sxt.banner.library.CycleViewPager
-            android:id="@+id/viewpager"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"></com.sxt.banner.library.CycleViewPager>
+            android:layout_height="wrap_content">
+
+            <com.sxt.banner.library.CycleViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"></com.sxt.banner.library.CycleViewPager>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:onClick="wifi"
+                android:padding="20dp"
+                android:text="WIFI"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/ll_bottom_list"

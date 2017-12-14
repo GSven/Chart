@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_white"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/wifi_search_progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateOnly="false" />
+
+    <ImageView
+        android:id="@+id/wifi_search_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/wifi_search_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="正在搜索无线网络..."
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/wifi_search_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="请确保您的多功能数据工作站，无线路由器（Wi-Fi）和手机在同一房间中，而且所有设备的电源打开和网络畅通。"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/wifi_search_success_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="请选择您访问互联网的无线网络："
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
+
+        <ListView
+            android:id="@+id/wifi_search_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wifi_search_fail_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="您可以："
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/wifi_search_again"
+            android:layout_width="210dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="重新搜索无线网络"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="或者"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/wifi_search_manual"
+            android:layout_width="210dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="手动输入网络名称"
+            android:textColor="@color/text_color_1"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

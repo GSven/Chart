@@ -3,6 +3,7 @@ package com.sxt.chart.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -79,6 +80,11 @@ public class MainActivity extends BaseActivity {
 
         drawCircleProgress();//圆形进度
     }
+
+    public void wifi(View view) {
+        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
+    }
+
 
     private void initViewPager() {
         String[] array = getResources().getStringArray(R.array.banner_urls);

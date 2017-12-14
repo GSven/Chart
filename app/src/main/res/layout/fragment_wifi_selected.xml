@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_body"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/wifi_selected_toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/wifi_selected_manual_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/text_color_1"
+            android:padding="5dp"
+            android:src="@drawable/ic_all_in_one_reader_sm" />
+
+        <EditText
+            android:id="@+id/wifi_selected_manual_ssid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:hint="请输入无线网络名称（SSID）"
+            android:paddingLeft="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/text_color_1"
+            android:padding="5dp"
+            android:src="@drawable/ic_all_in_one_reader_sm" />
+
+        <EditText
+            android:id="@+id/wifi_selected_manual_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:hint="请输入无线网络密码"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/wifi_selected_commit_text"
+        android:layout_width="210dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_all_in_one_reader_sm"
+        android:gravity="center"
+        android:text="确  定"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</LinearLayout>
