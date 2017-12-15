@@ -43,10 +43,10 @@ public class WifiAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int position, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_wifi, viewGroup,false);
+            view = LayoutInflater.from(context).inflate(R.layout.item_wifi, viewGroup, false);
             holder = new ViewHolder();
             holder.wifiRoot = view.findViewById(R.id.wifi_root);
             holder.wifiLine = view.findViewById(R.id.wifi_line);
@@ -57,11 +57,22 @@ public class WifiAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.wifiSsid.setText(data.get(i).BSSID);
-        if (i == data.size() - 1) {
+        ScanResult scanResult = data.get(position);
+        holder.wifiSsid.setText(scanResult.SSID);
+        if (position == data.size() - 1) {
             holder.wifiLine.setVisibility(View.GONE);
         } else {
             holder.wifiLine.setVisibility(View.VISIBLE);
+        }
+
+        if (Math.abs(scanResult.level) <= 50) {
+            holder.wifiLevel.setImageResource(R.drawable.ic_wifi_level3);
+        } else if (Math.abs(scanResult.level) <= 75) {
+            holder.wifiLevel.setImageResource(R.drawable.ic_wifi_level2);
+        } else if (Math.abs(scanResult.level) <= 100) {
+            holder.wifiLevel.setImageResource(R.drawable.ic_wifi_level1);
+        } else {
+            holder.wifiLevel.setImageResource(R.drawable.ic_wifi_level0);
         }
 
 

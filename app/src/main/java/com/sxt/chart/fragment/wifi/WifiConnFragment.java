@@ -1,5 +1,6 @@
 package com.sxt.chart.fragment.wifi;
 
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sxt.chart.R;
-import com.sxt.chart.activity.MainActivity;
 import com.sxt.chart.adapter.ObserverHelper;
 import com.sxt.chart.utils.Common;
 import com.sxt.chart.utils.UtilsWifi;
@@ -32,16 +32,16 @@ import java.util.TimerTask;
  */
 public class WifiConnFragment extends Fragment {
 
+    private String conn_ssid;
+    private String c_ssid;
+    private String c_pwd;
     public static final String KEY_CON_SSID = "KEY_CON_SSID";
     public static final String KEY_WIFI_SSID = "KEY_WIFI_SSID";
     public static final String KEY_WIFI_PWD = "KEY_WIFI_PWD";
 
-    private String conn_ssid;
-    private String c_ssid;
-    private String c_pwd;
-
     private TextView conn_ssidText;
     private ProgressBar connPgb;
+    private ScanResult scanResult;
 
     private Socket client;
     private SocketClientThread socketClientThread;
@@ -56,9 +56,7 @@ public class WifiConnFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        conn_ssid = getArguments().getString(KEY_CON_SSID);
-        c_ssid = getArguments().getString(KEY_WIFI_SSID);
-        c_pwd = getArguments().getString(KEY_WIFI_PWD);
+        scanResult = (ScanResult) getArguments().get("scanResult");
         timer = new Timer();
         downTimer = new WifiCountDown(Common.WIFI_TIME_OUT, 1000);
         ObserverHelper.getInstance().registerObserver(listener);
@@ -75,7 +73,9 @@ public class WifiConnFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         conn_ssidText = (TextView) view.findViewById(R.id.wifi_conn_ssid_text);
         connPgb = (ProgressBar) view.findViewById(R.id.wifi_conn_pgb);
-        conn_ssidText.setText(conn_ssid);
+        if (scanResult != null) {
+            conn_ssidText.setText(scanResult.SSID);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {

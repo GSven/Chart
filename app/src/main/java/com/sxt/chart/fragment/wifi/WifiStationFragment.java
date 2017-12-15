@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sxt.chart.R;
@@ -40,5 +41,22 @@ public class WifiStationFragment extends Fragment {
 
         ListView listView = view.findViewById(R.id.wifi_station_list);
         listView.setAdapter(new WifiAdapter(getActivity(), scanResult));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ScanResult scanResult = (ScanResult) adapterView.getAdapter().getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putString(WifiSelectedFragment.KEY_WIFI_SELECTED_SSID, scanResult.SSID);
+                bundle.putInt(WifiSelectedFragment.KEY_WIFI_SELECTED_LEVEL, scanResult.level);
+                WifiSelectedFragment fragment = new WifiSelectedFragment();
+                fragment.setArguments(bundle);
+                getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(WifiSelectedFragment.class.getName())
+                        .replace(R.id.wifi_setting_content, fragment)
+                        .commit();
+            }
+        });
     }
 }
