@@ -189,6 +189,7 @@ public class WifiUtil {
      * 查看系统设置源码中查看，系统是如何获取到隐藏网络的加密方式
      */
     static final int SECURITY_NONE = 0;
+
     static final int SECURITY_WEP = 1;
     static final int SECURITY_PSK = 2;
     static final int SECURITY_EAP = 3;
