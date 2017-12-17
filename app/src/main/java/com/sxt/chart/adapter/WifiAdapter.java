@@ -57,7 +57,7 @@ public class WifiAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.wifiSsid.setText(data.get(i).BSSID);
+        holder.wifiSsid.setText(data.get(i).SSID);
         if (i == data.size() - 1) {
             holder.wifiLine.setVisibility(View.GONE);
         } else {

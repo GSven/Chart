@@ -49,19 +49,20 @@ public class WifiSearchFragment extends Fragment {
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);//开启WIFI
         }
+        wifiManager.startScan();
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // 获取wifi连接需要定位权限,没有获取权限
-                ActivityCompat.requestPermissions(getActivity(), new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_WIFI_STATE,
-                }, WIFI_SCAN_PERMISSION_CODE);
-            }
-        } else {
-            wifiManager.startScan();
-        }
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                // 获取wifi连接需要定位权限,没有获取权限
+//                ActivityCompat.requestPermissions(getActivity(), new String[]{
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_WIFI_STATE,
+//                }, WIFI_SCAN_PERMISSION_CODE);
+//            }
+//        } else {
+//            wifiManager.startScan();
+//        }
     }
 
     @Override
