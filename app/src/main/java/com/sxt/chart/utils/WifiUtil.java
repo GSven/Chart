@@ -24,6 +24,7 @@ public class WifiUtil {
 
 
     public void openWifi() {
+
         if (!mWifiManager.isWifiEnabled()) {
             mWifiManager.setWifiEnabled(true);
         }
