@@ -25,36 +25,6 @@
 
     <string name="chart_histroy_data">历史数据</string>
     <string name="chart_zhihu_data">智护数据</string>
-    <string name="string_bottom">已经看完所有数据啦 (｡･ω･)ﾉﾞ</string>
-
-    <string name="string_unit_xt">(mmol/l)</string>
-    <string name="string_unit_hb">(次/分)</string>
-    <string name="string_unit_bt">(℃)</string>
-    <string name="string_unit_press">(mmhg)</string>
-    <string name="string_unit_step">(步)</string>
-    <string name="string_unit_lccs">(次)</string>
-    <string name="string_unit_fen">(份)</string>
-    <string name="string_unit_ml">(ml)</string>
-
-    <string name="string_label_lccs">离床次数</string>
-    <string name="string_rjlc">日间离床</string>
-    <string name="string_hdxs">活动形式</string>
-    <string name="string_label_smzl">睡眠质量</string>
-    <string name="string_label_xt">血糖</string>
-    <string name="string_label_hb">心跳</string>
-    <string name="string_label_press">血压血压</string>
-    <string name="string_label_bt">体温</string>
-    <string name="string_label_step">步数</string>
-    <string name="string_label_eat">进餐</string>
-    <string name="string_label_drink">饮水</string>
-    <string name="string_charbar_sleep_4">熟睡</string>
-    <string name="string_charbar_sleep_3">普通</string>
-    <string name="string_charbar_sleep_2">浅眠</string>
-    <string name="string_label_smzl_bad">差</string>
-    <string name="string_label_smzl_good">好</string>
-    <string name="string_chart_unit_month">月</string>
-    <string name="string_label_press_hight">高压</string>
-    <string name="string_label_press_lower">低压</string>
 
     <string-array name="diet_strings">
         <item>食欲</item>
@@ -63,6 +33,169 @@
         <item>进食量</item>
     </string-array>
 
+    <string name="self_order_no_wifi_1">查询不到网络</string>
+    <string name="self_order_no_wifi_2">我也很绝望啊</string>
+    <string name="izhaohu_reload">重新加载</string>
+    <string name="finish_tips">再按一次退出掌上智护</string>
+
+    <string name="forecast">趋势</string>
+    <string name="train">培训</string>
+    <string name="score">积分</string>
+    <string name="me">我的</string>
+    <string name="enter_phone_number">请输入手机号</string>
+    <string name="enter_phone_code">请输入验证码</string>
+    <string name="enter_password">请输入密码</string>
+    <string name="enter_inviter_phone_number">请输入好友手机号码</string>
+    <string name="login">登录</string>
+    <string name="register">新用户注册</string>
+    <string name="register_title">注册</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="password_retrieval">找回密码</string>
+    <string name="next">下一步</string>
+    <string name="send">发送</string>
+    <string name="code">验证码</string>
+    <string name="complete">完成</string>
+    <string name="set_password">设置密码</string>
+    <string name="inviting_friends">邀请好友</string>
+    <string name="share">分享</string>
+    <string name="addr_anagement">地址管理</string>
+    <string name="find">寻找爱照护</string>
+    <string name="contact">联系爱照护</string>
+    <string name="set">设置</string>
+    <string name="exchange_record">兑换记录</string>
+    <string name="integral_record">积分记录</string>
+    <string name="integral_unit">%s积分</string>
+    <string name="price_unit">￥%s</string>
+    <string name="price">金额</string>
+    <string name="price_unit_yuan">元</string>
+    <string name="everyday_sign">"  每日签到"</string>
+    <string name="exchange_shopping">商品兑换</string>
+    <string name="new_addr">新建收货地址</string>
+    <string name="new_addr_title">添加收货地址</string>
+    <string name="edit_addr_title">编辑收货地址</string>
+    <string name="save">保存</string>
+    <string name="consignee">收货人</string>
+    <string name="contact_number">联系电话</string>
+    <string name="location">所在地区</string>
+    <string name="street">街道</string>
+    <string name="please_enter">请输入</string>
+    <string name="please_enter_consignee">请输入2-10个字</string>
+    <string name="please_enter_phone">请输入11位手机号码</string>
+
+    <string name="please_select">请选择</string>
+    <string name="please_fill_in_the_details">请输入1-20个字</string>
+    <string name="default_setting">设为默认</string>
+    <string name="delete_address">删除地址</string>
+    <string name="clear_cache">清理缓存</string>
+    <string name="all_in_one">All-In-One</string>
+    <string name="binding">设备绑定</string>
+    <string name="check_for_updates">检查更新</string>
+    <string name="logout">退出登录</string>
+    <string name="personal_information">个人信息</string>
+    <string name="nickname">昵称</string>
+    <string name="sex">性别</string>
+    <string name="men">男</string>
+    <string name="women">女</string>
+    <string name="msg">消息</string>
+    <string name="product_details">商品详情</string>
+    <string name="product_rief">商品简介</string>
+    <string name="exchange">兑换</string>
+    <string name="pay">支付</string>
+    <string name="score_exchange">积分兑换</string>
+    <string name="send_type">配送方式</string>
+    <string name="courier_free">"快递  免邮"</string>
+    <string name="matters_needing_attention">"注意事项"</string>
+    <string name="enter_the_inviter_cell_phone_number">"输入邀请人手机号码"</string>
+    <string name="choose_an_invited_person">"选择被邀请人关系"</string>
+    <string name="friends_are_rewarded">"邀请好友 得奖励"</string>
+    <string name="yesterday">昨天</string>
+    <string name="composite_index">综合指数</string>
+    <string name="welcome_back">欢迎回来</string>
+    <string name="diet">饮食</string>
+    <string name="sleep">睡眠</string>
+    <string name="body">身体</string>
+    <string name="activity">活动</string>
+    <string name="attention_value">关爱值</string>
+    <string name="notice">公告</string>
+    <string name="m_size">%sM</string>
+
+
+    <string name="the_cell_phone_number_is_not_legal">手机号不合法</string>
+    <string name="the_code_is_not_legal">验证码不合法</string>
+    <string name="the_password_is_not_legal">密码不合法</string>
+
+    <string name="error_network_connection">网络连接错误,请检查网络</string>
+    <string name="error_login">登录失败,请确认用户名和密码是否正确.</string>
+    <string name="error_connection">连接服务器失败,请重试.</string>
+    <string name="error_username">用户名不存在.</string>
+    <string name="error_account_locked">帐号被锁定,请联系管理员.</string>
+    <string name="error_account_disabled">帐号被禁用,请联系管理员.</string>
+    <string name="error_request_data">数据请求失败,请重试.</string>
+    <string name="error_no_email">用户名不能为空.</string>
+    <string name="error_no_password">密码不能为空.</string>
+    <string name="error_upgrade_required">应用程序版本必须升级.</string>
+    <string name="error_invalid_role">登录角色错误.</string>
+    <string name="error_no_browser">您的手机未安装浏览器.</string>
+
+    <string name="pickerview_cancel">取消</string>
+    <string name="pickerview_submit">确定</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_month">月</string>
+    <string name="pickerview_day">日</string>
+    <string name="pickerview_hours">时</string>
+    <string name="pickerview_minutes">分</string>
+    <string name="pickerview_seconds">秒</string>
+    <string name="confirm_btn_text">立即领取</string>
+    <string name="fragment_add_address_successful">地址添加成功</string>
+    <string name="fragment_update_address_successful">更新地址成功</string>
+    <string name="fragment_delete_address_successful">删除地址成功</string>
+    <string name="my_score_string">我的积分:</string>
+    <string name="score_message_string">当前积分不足，是否使用共享积分 ？</string>
+    <string name="title_select_score">选择积分</string>
+    <string name="select_confirm_string">确定选择</string>
+    <string name="product_detail_score_too_less">积分不足</string>
+    <string name="exchange_successful">兑换成功</string>
+    <string name="phone_number_is_error">手机号码格式不正确</string>
+    <string name="please_input_relation">请选择您与被邀请人的关系</string>
+    <string name="invite_successful">邀请消息已发送</string>
+    <string name="enter_consignee_name">请输入收件人姓名</string>
+    <string name="enter_consignee_name_min_2length">收件人姓名不少于2个字</string>
+    <string name="string_empty_message">还啥都没有哟</string>
+    <string name="address_num_is_too_less">当前仅有一条地址，无法删除</string>
+    <string name="nike_name">%s用户</string>
+    <string name="portrait">头像</string>
+    <string name="update_version">更新版本</string>
+    <string name="re_download">重新下载</string>
+    <string name="happy">昨天长者心情不错哦</string>
+    <string name="unhappy">昨天长者心情低落哦</string>
+    <string name="nikename_hint">请输入昵称</string>
+
+    <string name="service_hotline">爱照护客服热线</string>
+    <string name="service_hotline_telephone">400-006-3300</string>
+    <string name="dial">拨打</string>
+
+    <string name="wait">请稍候...</string>
+
+    <string name="cancel">取消</string>
+    <string name="string_score_is_too_less">当前积分不足,无法抽奖</string>
+    <string name="string_sign_in_successful">签到成功, +2积分</string>
+    <string name="lottery_i_know">知道了</string>
+    <string name="lottery_confirm">确定</string>
+    <string name="lottery_thanks_1">别灰心</string>
+    <string name="lottery_thanks_2">再来一次吧</string>
+    <string name="string_lottery_congratulate">恭喜你</string>
+    <string name="string_recive_successfull">领取成功</string>
+    <string name="lottery_product_is_empty">暂无抽奖商品</string>
+
+    <string name="pic_cancel">取消</string>
+    <string name="pic_confirm">应用</string>
+    <string name="alert_title">温馨提示</string>
+    <string name="alert_confirm">确定</string>
+
+    <string name="senior_detail_item_title">比上次</string>
+
+    <string name="plaese_input_address_detail">请输入详细地址</string>
+    <string name="please_check_address">请检查地址</string>
     <string-array name="sleep_strings">
         <item>离床次数(次)</item>
         <item>安眠药</item>
@@ -94,8 +227,150 @@
         <item>mmHg</item>
         <item>mmol/L</item>
         <item>℃</item>
-        <item>CM</item>
-        <item>KG</item>
+        <item>cm</item>
+        <item>kg</item>
+    </string-array>
+
+    <string name="string_unit_xt">(mmol/l)</string>
+    <string name="string_unit_hb">(次/分)</string>
+    <string name="string_unit_bt">(℃)</string>
+    <string name="string_unit_press">(mmhg)</string>
+    <string name="string_unit_step">(步)</string>
+    <string name="string_unit_lccs">(次)</string>
+    <string name="string_unit_fen">(份)</string>
+    <string name="string_unit_ml">(ml)</string>
+
+    <string name="string_label_snyd">室内移动</string>
+    <string name="string_label_jcfj">进出房间</string>
+    <string name="string_label_smfs">睡眠翻身</string>
+    <string name="string_label_lccs">离床次数</string>
+    <string name="string_rjlc">日间离床</string>
+    <string name="string_hdxs">活动形式</string>
+    <string name="string_label_smzl">睡眠质量</string>
+    <string name="string_label_xt">血糖</string>
+    <string name="string_label_hb">心跳</string>
+    <string name="string_label_press">血压</string>
+    <string name="string_label_bt">体温</string>
+    <string name="string_label_step">步数</string>
+    <string name="string_label_eat">进餐</string>
+    <string name="string_label_drink">饮水</string>
+    <string name="string_charbar_sleep_4">熟睡</string>
+    <string name="string_charbar_sleep_3">普通</string>
+    <string name="string_charbar_sleep_2">浅眠</string>
+    <string name="string_label_smzl_bad">差</string>
+    <string name="string_label_smzl_good">好</string>
+    <string name="string_chart_unit_month">月</string>
+    <string name="string_label_press_hight">高压</string>
+    <string name="string_label_press_lower">低压</string>
+    <string name="string_exchange_successful">我们将以最快的速度配送</string>
+    <string name="string_reach_standard">恭喜团队成员关爱值超过7分\n每位团队成员获得额外的X积\n分奖励</string>
+    <string name="string_do_you_confirm_give_up">您确定要放弃该奖品吗?</string>
+    <string name="string_do_you_confirm_delete_address">您确定要删除该地址吗?</string>
+    <string name="string_forecast_no_care">还啥都没有哟\n请先添加关注长者</string>
+    <string name="string_notice">关注老人可产生关爱值呦</string>
+    <string name="lottery_exchange">商品领取</string>
+    <string name="string_product_get">领取</string>
+    <string name="prompt">温馨提示</string>
+    <string name="left_confirm">确定</string>
+    <string name="security_setting">安全设置</string>
+    <string name="server">服务地址</string>
+    <string name="string_share_friends">朋友圈</string>
+    <string name="string_share_friend">微信好友</string>
+    <string name="string_share_successful">分享成功</string>
+    <string name="string_share_cancel">分享取消</string>
+    <string name="train_title_course">名师讲堂</string>
+    <string name="train_title_news_list">今日推荐</string>
+    <string name="train_excellent_course">精品课程</string>
+    <string name="train_public_course">公共课程</string>
+    <string name="train_my_subscribe">我的预约</string>
+    <string name="train_look_course">查看课程</string>
+    <string name="subscribe">预约</string>
+    <string name="sign_in">签到</string>
+    <string name="my_subscribe">我的预约</string>
+    <string name="string_current_teacher">(本期讲师)</string>
+    <string name="string_train_content">培训内容:</string>
+    <string name="train_subscribe_successful">预约成功</string>
+    <string name="train_sign_in_successful">签到成功</string>
+    <string name="train_have_subscribe">您已预约</string>
+    <string name="train_have_sign_in">您已签到</string>
+    <string name="train_no_sign_in">还未到签到时间哟</string>
+    <string name="train_never_subscribe">已过期,不可预约</string>
+    <string name="train_never_sign_in">已过期,不可签到</string>
+    <string name="train_never_share">课程已过期,不能分享</string>
+    <string name="address_zq">自提门店</string>
+    <string name="address_zq_select">选择自取门店</string>
+    <string name="address_is_empty">暂无自取门店</string>
+    <string name="exchange_code">兑换码</string>
+    <string name="echange_no">待兑换</string>
+    <string name="exchange_have">已兑换</string>
+    <string name="exchange_pastdue">已过期</string>
+    <string name="exchange_encode">兑换二维码</string>
+    <string name="exchange_message_title">兑换提示</string>
+    <string name="exchange_message">静态码：是直接对电话、地址、网址等信息进行编码（一般最多50个文字）， 所以无需联网也能扫描显示，缺点是生成的二维码图案非常复杂，不容易识别和打印，容错率低；而且印刷后内容无法变更，无法存储图片和文件。</string>
+    <string name="code_flag">BookOrderNo=</string>
+
+    <string name="comming_soon">敬请期待</string>
+    <string name="date_abort">截止日期:&#160;</string>
+    <string name="date_used">使用日期:&#160;</string>
+    <string name="date_gone">失效日期:&#160;</string>
+    <string name="organization_zt">自提机构:&#160;</string>
+    <string name="get_product_address">取货地址:&#160;</string>
+    <string name="get_product_time_abort">(仅限周六09:00-15:00)</string>
+
+
+    <string name="message_exchange_str_1">你可在到达自提地点后，从积分-兑换记录中找到本订单，点击“兑换”再次显示本页面，以便工作人员核对信息发放商品</string>
+    <string name="code_address_message_1">地址:</string>
+    <string name="code_address_message_2">。过期将不能提取!</string>
+    <string name="code_exchange_message_1">您已成功兑换</string>
+    <string name="code_exchange_message_2">一份,消耗积分</string>
+    <string name="minute">分</string>
+    <string name="num">x1</string>
+    <string name="check_wechat_is_install">当前微信版本太低或未安装微信客户端</string>
+    <string name="please_select_pay_way">请选择支付方式</string>
+    <string name="invate_class">课程邀请</string>
+    <string name="COURSE_SHARE">course_share</string>
+    <string name="string_bottom">已经看完所有数据啦 (｡･ω･)ﾉﾞ</string>
+    <string name="organization">机构</string>
+    <string name="home">居家</string>
+
+    <string name="work_set_title">工作站设置</string>
+    <string name="work_set_content">实时传输，全天候看护</string>
+    <string name="number_set_title">亲情号设置</string>
+    <string name="number_set_content">一键呼叫，方便快捷</string>
+    <string name="binding_number">绑定亲情号</string>
+    <string name="add_work">添加数据工作站</string>
+    <string name="select_wifi">选择设备工作Wi-Fi</string>
+    <string name="select_izhaohu_wifi">选择设备Wi-Fi</string>
+
+
+    <string name="input_sim_number">输入该设备的内置手机卡号码</string>
+    <string name="input_number">输入您要绑定的手机号</string>
+    <string name="input_code">输入验证码</string>
+    <string name="send_code">发送验证码</string>
+    <string name="add_linkman">添加联系人</string>
+    <string name="bind">绑定</string>
+    <string name="linkman_first">亲情号第一联系人&#160;</string>
+    <string name="linkman_second">亲情号第二联系人&#160;</string>
+    <string name="linkman_third">亲情号第三联系人&#160;</string>
+    <string name="linkman_must">(必填)</string>
+    <string name="linkman_no_must">(选填)</string>
+    <string name="add_work_title0">接通电源，确认设备处于工作状态</string>
+    <string name="add_work_title1">接下来将会把您输入的无线网络连接您的数据工作站</string>
+    <string name="add_work_title2">设备已接通电源</string>
+    <string name="input_wifi_name">请输入WiFi名称</string>
+    <string name="input_wifi_pwd">请输入Wi-Fi密码</string>
+    <string name="change_wifi">更换其他Wi-Fi</string>
+    <string name="wifi_setting">请将手机Wi-Fi连接“izhaohu-xxx”后，返回智护App 继续设置</string>
+    <string name="current_wifi">当前Wi-Fi:</string>
+    <string name="seniors_is_empty">还没有关注的居家老人,请先到首页添加要关注的长者</string>
+    <string name="select_seniors">选择长者</string>
+    <string name="wifi_list">Wi-Fi列表</string>
+
+    <!--支付方式-->
+    <string-array name="pay_way_array">
+        <item>支付宝支付</item>
+        <!--<item>微信支付</item>-->
+        <!--<item>银联支付</item>-->
     </string-array>
 
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item android:id="@android:id/background">
+		<shape>
+			<corners android:radius="44dp" />
+			<solid android:color="#EFEFEF" />
+		</shape>
+	</item>
+	<!-- 进度条 -->
+	<item android:id="@android:id/progress">
+		<scale android:scaleWidth="100%">
+			<shape>
+				<corners android:topRightRadius="44dp"
+					android:bottomRightRadius="44dp"
+					android:topLeftRadius="44dp"
+					android:bottomLeftRadius="44dp"/>
+				<solid android:color="#FE7B00" />
+			</shape>
+		</scale>
+	</item>
+</layer-list>

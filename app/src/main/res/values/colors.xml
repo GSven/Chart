@@ -33,4 +33,58 @@
     <color name="alpha_1">#535353</color>
     <color name="alpha_2">#5D535353</color>
 
+    <drawable name="transparent">#00000000</drawable>
+    <drawable name="list_item_bg_normal">#FFFFFF</drawable>
+    <drawable name="list_item_bg_select">#ECF0F1</drawable>
+    <color name="main_body">#F5F5F5</color>
+    <color name="main_yellow">#7EC501</color>
+    <color name="main_yellow_pressed">#71B100</color>
+    <color name="dividing_line">#E8E8E8</color>
+    <color name="text_color_gray_3">#B8B8B8</color>
+    <color name="text_color_4">#FFF1F1</color>
+    <color name="text_color_5">#818791</color>
+    <color name="text_color_6">#4A4A4A</color>
+    <color name="text_color_7">#979797</color>
+    <color name="text_color_red">#F4505B</color>
+    <color name="tab_color">#818791</color>
+    <color name="title_color_blue">#7EC501</color>
+    <color name="red_1">#F61E59</color>
+    <color name="red_1_s">#D01A4D</color>
+    <color name="red_2">#F76567</color>
+    <color name="red_3">#FA1E00</color>
+    <color name="red_4">#FB5454</color>
+    <color name="red_5">#FF1C1C</color>
+    <color name="score_yellow_text">#FE9D00</color>
+    <color name="wheel_timebtn_nor">#54a3fa</color>
+    <color name="wheel_timebtn_pre">#CCCCCC</color>
+
+
+    <color name="light_green">#FAFCF6</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="gray">#f2f0f0</color>
+    <color name="yellow_green_middle">#8DC41F</color>
+    <color name="yellow_green_white">#C5E986</color>
+    <color name="green_white">#ECFFD8</color>
+    <color name="orange">#FFBB4D</color>
+    <color name="orange_1">#FFE9C5</color>
+    <color name="orange_light">#FFEA8A</color>
+    <color name="orange_dark">#fe7900</color>
+    <color name="green_normal">#8DC41F</color>
+    <color name="green_dark">#3bc41f</color>
+    <color name="black_dark">#000000</color>
+
+    <color name="resetpwd_edittexthint">#CBCBCB</color>
+    <color name="item_add_order_list_press">#FFF7EE</color>
+
+
+    <color name="percent_text_color_default">#009ACD</color>
+    <color name="percent_text_color">#3CB371</color>
+    <color name="percent_text_color_2">#A2CD5A</color>
+    <color name="progressbar_bg_color_default">#636363</color>
+    <color name="progress_color_default">#00C5CD</color>
+    <color name="progressbar_bg_color_1">#737373</color>
+    <color name="progress_color_1">#3CB371</color>
+    <color name="bg">#CDB5CD</color>
+
+
 </resources>

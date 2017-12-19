@@ -17,6 +17,8 @@ public class Prefs {
     private static Prefs prefs = new Prefs();
     private static SharedPreferences sp;
     private static final String SPNAME = "SP_NAME";
+    public static String KEY_WIFI_SSID = "KEY_WIFI_SSID";
+    public static String KEY_WIFI_PWD="KEY_WIFI_PWD";
 
     public synchronized static Prefs getInstance(Context context) {
         if (prefs == null) {

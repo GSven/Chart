@@ -1,19 +1,11 @@
 package com.sxt.chart.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.sxt.chart.R;
-import com.sxt.chart.fragment.wifi.WifiDescriptionFragment;
-
-import java.util.List;
+import com.sxt.chart.fragment.wifi.AddWorkerFragment;
 
 /**
  * Created by izhaohu on 2017/12/14.
@@ -32,7 +24,7 @@ public class WifiSettingActivity extends AppCompatActivity {
     private void createdDescriptionFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.wifi_setting_content, new WifiDescriptionFragment(), WifiDescriptionFragment.class.getName())
+                .add(R.id.wifi_setting_content, new AddWorkerFragment(), AddWorkerFragment.class.getName())
 //                .addToBackStack(WifiDescriptionFragment.class.getName())
                 .commit();
     }
