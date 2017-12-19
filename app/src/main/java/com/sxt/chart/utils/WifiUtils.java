@@ -80,7 +80,6 @@ public class WifiUtils {
     }
 
     public void connectWifi(String SSID, String Password, int Type) {
-
         if (!isWifiEnabled()) {
             OpenWifi();
         }
@@ -154,6 +153,8 @@ public class WifiUtils {
         WifiConfiguration config = getConfigBySSID(SSID);
         if (config == null) {
             config = new WifiConfiguration();
+        } else {
+            removeNetwork(config.networkId);
         }
         config.SSID = initSSID(SSID);
 
