@@ -23,6 +23,7 @@
         android:paddingTop="12dp">
 
         <TextView
+            android:text="dfghfhsdfhfhjkdsfdghj"
             android:id="@+id/item_wifi_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
             android:textSize="15dp" />
 
         <TextView
+            android:text="3456567890-987654"
             android:id="@+id/item_wifi_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
