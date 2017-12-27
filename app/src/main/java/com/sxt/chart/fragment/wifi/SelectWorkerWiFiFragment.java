@@ -1,15 +1,23 @@
 package com.sxt.chart.fragment.wifi;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,14 +33,13 @@ import com.sxt.chart.adapter.WiFiListAdapter;
 import com.sxt.chart.chart.DialogBuilder;
 import com.sxt.chart.chart.LoadingDialog;
 import com.sxt.chart.fragment.BaseFragment;
+import com.sxt.chart.utils.LogUtil;
 import com.sxt.chart.utils.Prefs;
 import com.sxt.chart.utils.ToastUtil;
 import com.sxt.chart.utils.WifiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
 import static android.net.wifi.WifiManager.WIFI_STATE_CHANGED_ACTION;
@@ -40,21 +47,19 @@ import static android.net.wifi.WifiManager.WIFI_STATE_CHANGED_ACTION;
 /**
  * Created by izhaohu on 2017/12/15.
  */
-
 public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnClickListener {
 
     private Activity activity;
     private ImageView imgLevel;
     private TextView tvName;
-    private EditText etPwd;
+    //    private EditText tvPwd;
     private TextView tvNext;
     private Bundle bundle;
-    private WifiManager wifiManager;
     private WifiReceiver wifiReceiver;
     private View view;
     private View wifiArrowRoot;
     private DialogBuilder builder;
-
+    private WifiManager wifiManager = WifiUtils.getInstance().getmWifiManager();
     private ExpandableListView expandableListView;
     private ArrayList<ScanResult> scanResults = new ArrayList<>();
     private ArrayList<WifiUtils.WifiScanResult> scanResultHaveLinked = new ArrayList<>();
@@ -66,9 +71,7 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
     private TextView tvWifiName;
     private EditText etWifiPwd;
     private LoadingDialog loadingDialog;
-    private Timer timer;
-    private TimerTask timerTask;
-    private long time = 8 * 1000;
+    private WiFiCountDownTimer wiFiCountDownTimer;
 
     @Override
     public void onAttach(Activity activity) {
@@ -81,7 +84,7 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         super.onCreate(savedInstanceState);
         bundle = getArguments();
         loadingDialog = new LoadingDialog(activity);
-        initWifiSettings();
+        checkPermission();
     }
 
     @Nullable
@@ -92,7 +95,7 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
             wifiArrowRoot = view.findViewById(R.id.wifi_arrow);
             imgLevel = (ImageView) view.findViewById(R.id.img_wifi_level);
             tvName = (TextView) view.findViewById(R.id.tv_wifi_name);
-            etPwd = (EditText) view.findViewById(R.id.et_wifi_pwd);
+//            tvPwd = (EditText) view.findViewById(R.id.et_wifi_pwd);
             tvNext = (TextView) view.findViewById(R.id.tv_next);
             tvNext.setOnClickListener(this);
             wifiArrowRoot.setOnClickListener(this);
@@ -102,15 +105,12 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         return view;
     }
 
-    private void initWifiSettings() {
-        if (wifiManager == null) {
-            wifiManager = WifiUtils.getInstance().getmWifiManager();
-        }
+    private void configWiFiSettings() {
         if (!WifiUtils.getInstance().isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);//开启WIFI
         }
         if (wifiReceiver == null) {
-            wifiReceiver = new WifiReceiver();
+            wifiReceiver = new SelectWorkerWiFiFragment.WifiReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(SCAN_RESULTS_AVAILABLE_ACTION);
             filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -118,6 +118,76 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
             getActivity().registerReceiver(wifiReceiver, filter);
         }
         wifiManager.startScan();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configWiFiSettings();
+    }
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] permissions = new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_WIFI_STATE,
+                    Manifest.permission.CHANGE_WIFI_STATE,
+                    Manifest.permission.CHANGE_WIFI_MULTICAST_STATE
+            };
+            /**
+             *检测需要获取的权限
+             */
+            List<String> needRequestPermissonList = findDeniedPermissions(permissions);
+            if (null != needRequestPermissonList
+                    && needRequestPermissonList.size() > 0) {
+                ActivityCompat.requestPermissions(activity,
+                        needRequestPermissonList.toArray(
+                                new String[needRequestPermissonList.size()]),
+                        111);
+            }
+
+        } else {
+            configWiFiSettings();
+        }
+    }
+
+    /**
+     * 获取权限集 中需要申请权限的列表
+     *
+     * @param permissions
+     */
+    private List<String> findDeniedPermissions(String[] permissions) {
+        List<String> needRequestPermissonList = new ArrayList<String>();
+        for (String perm : permissions) {
+            if (ContextCompat.checkSelfPermission(activity,
+                    perm) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity, perm)) {
+                needRequestPermissonList.add(perm);
+            }
+        }
+        return needRequestPermissonList;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case 111:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    configWiFiSettings();
+                    LogUtil.i("wifi", "获取到wifi权限");
+                } else {
+                    LogUtil.i("wifi", "没有获取到wifi权限");
+                }
+                break;
+            default:
+                break;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -131,9 +201,7 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
                     initWifiItem(wifiItem);
                     builder.replaceView(wifiItem).setCancelableOutSide(false);
                 }
-                wifiManager.startScan();
                 builder.show(1, Gravity.TOP);
-
                 break;
 
             case R.id.tv_next:
@@ -143,27 +211,19 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
     }
 
     private void next() {
-
-//        if (TextUtils.isEmpty(etPwd.getText()) && !selectedScanResult.capabilities.equals("[ESS]")) {
-//            ToastUtil.showToast(activity, "请输入Wi-Fi密码");
-//            return;
-//        }
-//
-//        if ("[ESS]".equals(selectedScanResult.capabilities)) {
-//            WifiUtils.getInstance().connectWifi(tvName.getText().toString(), etPwd.getText().toString().trim(), WifiUtils.WIFICIPHER_NOPASS);
-//        } else {
-//            WifiUtils.getInstance().connectWifi(tvName.getText().toString(), etPwd.getText().toString().trim(), WifiUtils.WIFICIPHER_WPA);
-//        }
-
+        if (selectedScanResult == null || selectedScanResult.SSID == null || !WifiUtils.getInstance().initSSID(selectedScanResult.SSID).equals(WifiUtils.getInstance().initSSID(wifiManager.getConnectionInfo().getSSID()))) {
+            ToastUtil.showToast(activity, "请确认您选择的Wi-Fi是否正常连接");
+            return;
+        }
         SelectIzhaohuWiFiFragment fragment = new SelectIzhaohuWiFiFragment();
         Bundle arguments = new Bundle();
-        arguments.putString(Prefs.KEY_WIFI_SSID, currentLinked.SSID);
-        arguments.putString(Prefs.KEY_WIFI_PWD, currentLinked.PWD);
+        arguments.putString(Prefs.KEY_WIFI_SSID, selectedScanResult.SSID);
+        arguments.putString(Prefs.KEY_WIFI_PWD, selectedScanResult.PWD);
         fragment.setArguments(arguments);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.wifi_setting_content, fragment, SelectIzhaohuWiFiFragment.class.getName())
-                .addToBackStack(SelectIzhaohuWiFiFragment.class.getName())
+//                .addToBackStack(SelectIzhaohuWiFiFragment.class.getName())
                 .commit();
     }
 
@@ -185,17 +245,13 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                WifiUtils.WifiScanResult result = (WifiUtils.WifiScanResult) wifiAdapter.getChild(groupPosition, childPosition);
-                selectedScanResult = result;
-                String ssid = result.SSID.replaceAll("\"", "");
-                if ("[ESS]".equals(result.capabilities)) {
-                    etPwd.setEnabled(false);
-                    etPwd.setHint("该Wi-Fi未加密");
+                selectedScanResult = (WifiUtils.WifiScanResult) wifiAdapter.getChild(groupPosition, childPosition);
+                String ssid = selectedScanResult.SSID.replaceAll("\"", "");
+                if ("[ESS]".equals(selectedScanResult.capabilities)) {
+
                     WifiUtils.getInstance().connectWifi(ssid, "", WifiUtils.WIFICIPHER_NOPASS);
                 } else {
-                    etPwd.setEnabled(true);
-                    etPwd.setHint(R.string.input_wifi_pwd);
-                    connectWiFi(result);
+                    connectWiFi(selectedScanResult);
                 }
                 tvName.setText(ssid);
                 return false;
@@ -221,18 +277,29 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
             @Override
             public void onClick(View view) {
                 if ("[ESS]".equals(result.capabilities)) {
-                    WifiUtils.getInstance().connectWifi(result.SSID, "", WifiUtils.WIFICIPHER_NOPASS);
+                    startWatch();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            WifiUtils.getInstance().connectWifi(result.SSID, "", WifiUtils.WIFICIPHER_NOPASS);
+                        }
+                    }.start();
+
                 } else {
                     final String trim = etWifiPwd.getText().toString().trim();
                     if (TextUtils.isEmpty(trim)) {
                         ToastUtil.showToast(activity, "请输入Wi-Fi密码");
                         return;
                     }
+                    startWatch();
                     new Thread() {
                         @Override
                         public void run() {
                             super.run();
-                            startWatch();
+                            if (selectedScanResult != null) {
+                                selectedScanResult.PWD = trim;
+                            }
                             WifiUtils.getInstance().connectWifi(result.SSID, trim, WifiUtils.WIFICIPHER_WPA);
                         }
                     }.start();
@@ -252,12 +319,9 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
         if (networks != null) {
             for (WifiConfiguration config : networks) {
-                if (config == null || config.SSID == null || config.SSID.length() == 0) {
-                    continue;
-                }
                 WifiUtils.WifiScanResult result = new WifiUtils.WifiScanResult(
                         config.BSSID,
-                        WifiUtils.getInstance().initSSID(config.SSID),
+                        config.SSID,
                         WifiUtils.getInstance().getSecurity(config),
                         0);
                 if (wifiManager.getConnectionInfo().getSSID().equals(config.SSID)) {
@@ -274,15 +338,14 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
 
         if (scanResults != null) {
             for (ScanResult s : scanResults) {
-                if (s == null || s.SSID == null || s.SSID.length() == 0) {
-                    continue;
+                if (s != null && s.SSID != null && !TextUtils.isEmpty(s.SSID)) {
+                    WifiUtils.WifiScanResult result = new WifiUtils.WifiScanResult(
+                            s.BSSID,
+                            s.SSID,
+                            s.capabilities,
+                            s.level);
+                    scanResultNoLinked.add(result);
                 }
-                WifiUtils.WifiScanResult result = new WifiUtils.WifiScanResult(
-                        s.BSSID,
-                        WifiUtils.getInstance().initSSID(s.SSID),
-                        s.capabilities,
-                        s.level);
-                scanResultNoLinked.add(result);
             }
         }
     }
@@ -298,12 +361,11 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
                     tvName.setText(wifiManager.getConnectionInfo().getSSID().replaceAll("\"", ""));
                 } else {
                     wifiArrowRoot.setEnabled(false);
-                    tvName.setText("暂未发现周边W-Fi,请确保Wi-Fi开关已打开");
+                    tvName.setText("暂未发现周边W-Fi");
                 }
                 notifyDataSetChanged();
 
             } else if (intent.getAction().equals(WIFI_STATE_CHANGED_ACTION)) {
-                ToastUtil.showToast(activity, "change");
             }
 
         }
@@ -316,48 +378,86 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         }
     }
 
+    private Handler handler = new Handler();
+
     private void startWatch() {
-        if (timerTask != null) timerTask.cancel();
-        if (timer == null) {
-            timer = new Timer();
+        if (wiFiCountDownTimer == null) {
+            wiFiCountDownTimer = new WiFiCountDownTimer(16 * 1000, 4 * 1000);
         }
-        timerTask = new Task();
-        timer.schedule(timerTask, time);
+        wiFiCountDownTimer.start();
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loadingDialog.show();
-                inputWifiBuilder.dismiss();
             }
         });
     }
 
     public void stopWatch() {
-        if (timerTask != null) {
-            timerTask.cancel();
-        }
-        activity.runOnUiThread(new Runnable() {
+
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (inputWifiBuilder != null) {
-                    inputWifiBuilder.dismiss();
-                }
-                if (loadingDialog != null) {
-                    loadingDialog.dismiss();
+                if (wiFiCountDownTimer != null) {
+                    wiFiCountDownTimer.cancel();
+                    wiFiCountDownTimer = null;
                 }
 
+                dismissDialogs();
+
                 if (selectedScanResult != null) {
-                    if (WifiUtils.getInstance().initSSID(wifiManager.getConnectionInfo().getSSID()).equals(WifiUtils.getInstance().initSSID(selectedScanResult.SSID))) {
-                        ToastUtil.showToast(activity, "连接成功");
-                        if (builder != null) {
-                            builder.dismiss();
+                    String ssid = wifiManager.getConnectionInfo().getSSID();
+                    if (ssid != null) {
+                        if (selectedScanResult.SSID.contains(ssid) || ssid.contains(selectedScanResult.SSID)) {
+                            ToastUtil.showToast(activity, "连接成功");
+                            tvName.setText(selectedScanResult.SSID.replaceAll("\"", ""));
+//                            tvPwd.setText(selectedScanResult.PWD);
+                        } else {
+                            ToastUtil.showToast(activity, "连接出错,请重试");
+                            selectedScanResult = null;
                         }
-                    } else {
-                        ToastUtil.showToast(activity, "连接超时,请检查密码是否输入正确");
                     }
+                } else {
+                    ToastUtil.showToast(activity, "连接出错,请重新选择Wi-Fi");
                 }
             }
-        });
+        }, 3000);
+    }
+
+
+    private class WiFiCountDownTimer extends CountDownTimer {
+
+        public WiFiCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if (selectedScanResult != null && wifiManager.getConnectionInfo() != null && wifiManager.getConnectionInfo().getSSID() != null) {
+                String ssid = wifiManager.getConnectionInfo().getSSID();
+                if (WifiUtils.getInstance().initSSID(ssid).equals(WifiUtils.getInstance().initSSID(selectedScanResult.SSID))) {
+                    stopWatch();
+                }
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            stopWatch();
+        }
+    }
+
+    private void dismissDialogs() {
+        if (inputWifiBuilder != null) {
+            inputWifiBuilder.dismiss();
+        }
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        if (builder != null) {
+            builder.dismiss();
+        }
     }
 
     @Override
@@ -365,16 +465,12 @@ public class SelectWorkerWiFiFragment extends BaseFragment implements View.OnCli
         if (wifiReceiver != null) {
             activity.unregisterReceiver(wifiReceiver);
         }
-        if (timer != null) {
-            timer.cancel();
+        if (wiFiCountDownTimer != null) {
+            wiFiCountDownTimer.cancel();
+        }
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
         }
         super.onDestroy();
-    }
-
-    private class Task extends TimerTask {
-        @Override
-        public void run() {
-            stopWatch();
-        }
     }
 }

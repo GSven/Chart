@@ -21,6 +21,7 @@ import com.sxt.chart.adapter.BannerAdapter;
 import com.sxt.chart.chart.BeizerCurveLine;
 import com.sxt.chart.chart.ChartBar;
 import com.sxt.chart.chart.ChartBean;
+import com.sxt.chart.chart.ChartPie;
 import com.sxt.chart.chart.CircleProgressView;
 import com.sxt.chart.chart.LineOnScrollChangeListener;
 
@@ -70,8 +71,9 @@ public class MainActivity extends BaseActivity {
         initViewPager();//轮播图
         initData();
         for (int i = 0; i < 50; i++) {
-//            drawLine();//曲线
-            if (i % 2 == 0) {
+            if (i == 0) {
+                drawPie();
+            } else if (i % 2 == 0) {
                 drawBar();//柱状图
             } else {
                 drawLine();//曲线
@@ -82,8 +84,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void wifi(View view) {
-//        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
-        startActivity(new Intent(getApplicationContext(), DragerActivity.class));
+        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
+//        startActivity(new Intent(getApplicationContext(), DragerActivity.class));
     }
 
 
@@ -158,6 +160,14 @@ public class MainActivity extends BaseActivity {
         chartBeanList0.add(new ChartBean("6", 10));
         chartBeanList0.add(new ChartBean("7", 30));
         chartBeanList0.add(new ChartBean("8", 5));
+    }
+
+    private void drawPie() {
+        //底部的曲线图
+        View childAt = View.inflate(this, R.layout.item_chart_pie, null);
+        bottomListRoot.addView(childAt);
+        ChartPie chartPie = childAt.findViewById(R.id.chart_pie);
+        chartPie.start();
     }
 
     private void drawLine() {

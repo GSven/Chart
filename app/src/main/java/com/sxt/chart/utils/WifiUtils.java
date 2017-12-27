@@ -58,7 +58,7 @@ public class WifiUtils {
         return mWifiManager.isWifiEnabled();
     }
 
-    public void OpenWifi() {
+    public void openWifi() {
         if (!mWifiManager.isWifiEnabled())
             mWifiManager.setWifiEnabled(true);
     }
@@ -75,13 +75,13 @@ public class WifiUtils {
     public void removeNetwork(int netId) {
         if (mWifiManager != null) {
             mWifiManager.removeNetwork(netId);
-//            mWifiManager.saveConfiguration();
+            mWifiManager.saveConfiguration();
         }
     }
 
-    public void connectWifi(String SSID, String Password, int Type) {
+    public boolean connectWifi(String SSID, String Password, int Type) {
         if (!isWifiEnabled()) {
-            OpenWifi();
+            openWifi();
         }
         // 开启wifi需要一段时间,要等到wifi状态变成WIFI_STATE_ENABLED
         while ((mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING)) {
@@ -90,30 +90,32 @@ public class WifiUtils {
                 Thread.currentThread();
                 Thread.sleep(500);
             } catch (Exception ie) {
+                ie.printStackTrace();
             }
         }
 
         WifiConfiguration wifiConfig = createWifiInfo(SSID, Password, Type);
         if (wifiConfig == null) {
-            return;
+            mWifiManager.reconnect();
+            return false;
         }
-        disableAllWifi();
+        disableAllWifi(SSID);
 
         int netID = wifiConfig.networkId;
-
-        LogUtil.i("wifi", "前 netID == " + netID);
         if (netID == -1) {
             netID = mWifiManager.addNetwork(wifiConfig);
-            LogUtil.i("wifi", "后 netID == " + netID);
+            LogUtil.i("wifi", "add ... netID == >>> " + netID);
+        } else {
+            LogUtil.i("wifi", "old ... netID == >>> " + netID);
+//            mWifiManager.updateNetwork(wifiConfig);
         }
-        LogUtil.i("wifi", "果 netID == " + netID);
         boolean network = mWifiManager.enableNetwork(netID, true);
-        LogUtil.i("wifi", "果 network == " + network);
         if (network) {//保持WIFI配置
-//            mWifiManager.saveConfiguration();
+            mWifiManager.saveConfiguration();
         }
         mWifiManager.reconnect();
-        LogUtil.i("wifi", "走完了");
+        LogUtil.i("wifi", "network == " + network);
+        return network;
     }
 
     public void disconnectWifi(int paramInt) {
@@ -124,11 +126,24 @@ public class WifiUtils {
         mWifiManager.startScan();
     }
 
-    private void disableAllWifi() {
+    /**
+     * 不主动连接之前的wifi , 因为断开Wi-Fi重新连接时 , 系统会自动重连 , 速度比自己手动连接更快 ,
+     * 会导致自己手动操作 无法执行 最终导致Wi-Fi连接失败
+     * <p>
+     * 所以 , 这里将其他Wi-Fi的自动重连屏蔽掉 , 保留当前的
+     *
+     * @param SSID
+     */
+    private void disableAllWifi(String SSID) {
         if (mWifiManager != null) {
-            for (WifiConfiguration config : mWifiManager.getConfiguredNetworks()) {
-                mWifiManager.disableNetwork(config.networkId);
-                mWifiManager.saveConfiguration();
+            List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
+            if (configuredNetworks != null) {
+                for (WifiConfiguration config : configuredNetworks) {
+//                    if (!initSSID(config.SSID).equals(initSSID(SSID))) {
+                    mWifiManager.disableNetwork(config.networkId);
+//                        mWifiManager.saveConfiguration();
+//                    }
+                }
             }
         }
     }
@@ -138,11 +153,13 @@ public class WifiUtils {
         WifiConfiguration config = null;
         if (mWifiManager != null) {
             List<WifiConfiguration> existingConfigs = mWifiManager.getConfiguredNetworks();
-            for (WifiConfiguration existingConfig : existingConfigs) {
-                if (existingConfig == null) continue;
-                if (SSID.equals(existingConfig.SSID)) {
-                    config = existingConfig;
-                    break;
+            if (existingConfigs != null) {
+                for (WifiConfiguration existingConfig : existingConfigs) {
+                    if (existingConfig == null) continue;
+                    if (initSSID(SSID).equals(initSSID(existingConfig.SSID))) {
+                        config = existingConfig;
+                        break;
+                    }
                 }
             }
         }
@@ -152,10 +169,49 @@ public class WifiUtils {
     private WifiConfiguration createWifiInfo(String SSID, String Password, int Type) {
         WifiConfiguration config = getConfigBySSID(SSID);
         if (config == null) {
-            config = new WifiConfiguration();
+            config = createWifiConfig(SSID, Password, Type, new WifiConfiguration());
         } else {
-            removeNetwork(config.networkId);
+            config = updateConfig(Password, Type, config);
         }
+        return config;
+    }
+
+    private WifiConfiguration updateConfig(String Password, int Type, WifiConfiguration config) {
+        if (Type == WIFICIPHER_NOPASS) {
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            config.wepTxKeyIndex = 0;
+            config.priority = 20000;
+            config.wepKeys[0] = "\"" + "\"";
+        }
+        if (Type == WIFICIPHER_WEP) {
+            config.hiddenSSID = true;
+            config.wepKeys[0] = "\"" + Password + "\"";
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        }
+        if (Type == WIFICIPHER_WPA) {
+
+            config.preSharedKey = "\"" + Password + "\"";
+            config.hiddenSSID = true;
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            // config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            config.status = WifiConfiguration.Status.ENABLED;
+        }
+        int update = mWifiManager.updateNetwork(config);
+        LogUtil.i("wifi", "添加过 update == >>> " + update);
+        return config;
+    }
+
+    private WifiConfiguration createWifiConfig(String SSID, String Password, int Type, WifiConfiguration config) {
         config.SSID = initSSID(SSID);
 
         config.allowedAuthAlgorithms.clear();
