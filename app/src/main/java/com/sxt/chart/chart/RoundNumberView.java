@@ -17,6 +17,7 @@ import com.sxt.chart.utils.Px2DpUtil;
 public class RoundNumberView extends View {
 
     private Paint basePaint;
+    private float basePadding = 8;
     private float startX;
     private float startY;
     private float endX;
@@ -24,7 +25,7 @@ public class RoundNumberView extends View {
     private float centerX;
     private float centerY;
     private float R;
-    private String text="2";
+    private String text = "2";
     private int resId;
 
     public RoundNumberView(Context context) {
@@ -56,10 +57,10 @@ public class RoundNumberView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
-            startX = getPaddingLeft();
-            endX = getMeasuredWidth() - getPaddingRight();
-            startY = getMeasuredHeight() - getPaddingBottom();
-            endY = getPaddingTop();
+            startX = getPaddingLeft() + basePadding;
+            endX = getMeasuredWidth() - getPaddingRight() - basePadding;
+            startY = getMeasuredHeight() - getPaddingBottom() - basePadding;
+            endY = getPaddingTop() + basePadding;
             centerX = startX + (endX - startX) / 2;
             centerY = endY + (startY - endY) / 2;
             R = (endX - startX) / 2;
@@ -82,9 +83,9 @@ public class RoundNumberView extends View {
         super.onDraw(canvas);
 
 //        if (text != null) {
-            Paint paint = new Paint(basePaint);
-            canvas.drawCircle(centerX, centerY, R, paint);
-            canvas.drawText(text, centerX, centerY, paint);
+        Paint paint = new Paint(basePaint);
+        canvas.drawCircle(centerX, centerY, R, paint);
+        canvas.drawText(text, centerX, centerY, paint);
 //        } else if (resId != 0) {
 //            Paint paint = new Paint(basePaint);
 //            canvas.drawCircle(centerX, centerY, R, paint);

@@ -1,12 +1,12 @@
 package com.sxt.chart.chart;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -15,20 +15,24 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.View;
 
 import com.sxt.chart.R;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sxt on 2017/8/5.
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ChartPie extends View {
+public class ChartPie extends BaseChart {
 
     private Paint basePaint;
     private Paint piePaint;
     private Paint centerPiePaint;
     private Paint linePaint;
+    private Paint pointPaint;
     private Paint textPaint;
 
     private float basePadding = 30;
@@ -36,20 +40,19 @@ public class ChartPie extends View {
     private float endX;
     private float startY;
     private float endY;
-    /**
-     * 是否需要执行动画
-     */
-    private boolean isPlayAnimator = true;
-    private float mAnimatorValue;
+
+    private boolean starting = false;
+    private boolean isFirst = true;
+    private float mAnimatorValue = 0;
     private ValueAnimator valueAnimator;
     /**
      * 动画执行的时长
      */
-    private long duration = 3000;
+    private long duration = 1500;
     /**
      * 圆心坐标
      */
-    private float[] centerXY;
+    private float[] radius;
     /**
      * 内部白色圆半径
      */
@@ -58,31 +61,39 @@ public class ChartPie extends View {
      * 外部圆半径
      */
     private float pieR;
-
     /**
+     * 绘制扇形的区域
      */
-    private RectF areaPie;
+    private RectF areaArc;
     /**
-     * 扇形开始的角度
+     * 存储各个扇形圆弧中心点的坐标
      */
-    private int startAngle = -90;
+    private Map<Integer, float[]> arcPoints = new HashMap<>();
+    /**
+     * 存储各个扇形的画笔
+     */
+    private Map<Integer, Paint> paintMap = new HashMap<>();
+    /**
+     * 存储各个扇形的数据对象
+     */
+    private Map<Integer, ChartPieBean> pieBeanMap = new HashMap<>();
+    private int startAnimatorValue = 0;
+    private int endAnimatorValue = 360;
 
     public ChartPie(Context context) {
         super(context);
-        init();
     }
 
     public ChartPie(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public ChartPie(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
-    private void init() {
+    public void init(Context context) {
+        super.init(context);
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setColor(Color.GRAY);
         basePaint.setStrokeWidth(dip2px(0.5f));
@@ -97,9 +108,12 @@ public class ChartPie extends View {
         centerPiePaint.setColor(Color.WHITE);
 
         linePaint = new Paint(basePaint);
+        linePaint.setColor(Color.RED);
+        pointPaint = new Paint(basePaint);
+        pointPaint.setStrokeWidth(dip2px(5));
 
         textPaint = new Paint(basePaint);
-        textPaint.setColor(ContextCompat.getColor(getContext(), R.color.text_color_1));
+        textPaint.setColor(ContextCompat.getColor(getContext(), R.color.text_color_3));
         textPaint.setTextAlign(Paint.Align.LEFT);
         Typeface font0 = Typeface.create(Typeface.SANS_SERIF, Typeface.DEFAULT_BOLD.getStyle());
         textPaint.setTypeface(font0);
@@ -113,12 +127,12 @@ public class ChartPie extends View {
             endX = getMeasuredWidth() - getPaddingRight() - basePadding;
             startY = getMeasuredHeight() - getPaddingBottom() - basePadding;
             endY = getPaddingTop() + basePadding;
-            centerXY = new float[2];
-            centerXY[0] = startX + (endX - startX) / 2;
-            centerXY[1] = endY + (startY - endY) / 2;
-            whiteR = (endX - startX) / 8;
+            radius = new float[2];
+            radius[0] = startX + (endX - startX) / 2;
+            radius[1] = endY + (startY - endY) / 2;
+            whiteR = (endX - startX) / 10;
             pieR = (endX - startX) / 4;
-            areaPie = new RectF(centerXY[0] - pieR, centerXY[1] - pieR, centerXY[0] + pieR, centerXY[1] + pieR);
+            areaArc = new RectF(radius[0] - pieR, radius[1] - pieR, radius[0] + pieR, radius[1] + pieR);
         }
     }
 
@@ -126,52 +140,165 @@ public class ChartPie extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (centerXY == null) return;
+        if (mAnimatorValue == 0) return;
         drawPie(canvas);//画饼图
         drawCenter(canvas);//画中心
         drawLines(canvas);//画折线
     }
 
     private void drawPie(Canvas canvas) {
-        for (int i = 0; i < mAnimatorValue; i++) {
-            if (mAnimatorValue < 50) {
-                piePaint.setColor(Color.GRAY);
-            } else if (mAnimatorValue == 50) {
-                piePaint.setColor(Color.GRAY);
-                startAngle = -40;
-            } else if (mAnimatorValue < 180) {
-                piePaint.setColor(Color.RED);
-            } else if (mAnimatorValue == 180) {
-                piePaint.setColor(Color.RED);
-                startAngle = 90;
-            } else if (mAnimatorValue < 200) {
-                piePaint.setColor(Color.BLUE);
-            } else if (mAnimatorValue == 200) {
-                piePaint.setColor(Color.BLUE);
-                startAngle = 110;
-            } else if (mAnimatorValue < 300) {
-                piePaint.setColor(Color.YELLOW);
-            } else if (mAnimatorValue == 300) {
-                piePaint.setColor(Color.YELLOW);
-                startAngle = 210;
-            } else if (mAnimatorValue < 360) {
-                piePaint.setColor(Color.GREEN);
+        for (int i = 0; i < pieBeanMap.size(); i++) {
+            ChartPieBean bean = pieBeanMap.get(i);
+            float angle = bean.startAngle + bean.sweepAngle;
+            if (angle <= mAnimatorValue) {
+                canvas.drawArc(areaArc, bean.startAngle, bean.sweepAngle, true, paintMap.get(i));
+            } else {
+                float sweepAngle = mAnimatorValue - bean.startAngle;
+                if (sweepAngle >= 0) {
+                    canvas.drawArc(areaArc, bean.startAngle, sweepAngle, true, paintMap.get(i));
+                }
             }
-            canvas.drawArc(areaPie, startAngle, mAnimatorValue, true, piePaint);
         }
     }
 
-    private void drawCenter(Canvas canvas) {
-        canvas.drawCircle(centerXY[0], centerXY[1], whiteR, centerPiePaint);
-    }
+    public ChartPie setData(List<ChartPieBean> data) {
+        if (data != null) {
+            float total = getTotal(data);
+            Paint paint;
+            float rate;
+            float[] point;
+            double arcPI = Math.PI * 2 / 360;//π的值
+            float startAngle = 0;// 扇形开始的角度
+            for (int i = 0; i < data.size(); i++) {
+                ChartPieBean bean = data.get(i);
+                rate = bean.value / total;//当前对象值所占比例
+                bean.rate = rate;
+                bean.startAngle = startAngle;
+                bean.sweepAngle = rate * 360;//当前对象所占比例 对应的 角度
 
-    private void drawLines(Canvas canvas) {
+                //计算当前圆弧上的中心点'
+                if (radius != null) {
+                    point = new float[2];
+                    point[0] = (float) (radius[0] + pieR * Math.cos(arcPI * bean.startAngle + bean.sweepAngle));
+                    point[1] = (float) (radius[1] + pieR * Math.sin(arcPI * bean.startAngle + bean.sweepAngle));
+                    arcPoints.put(i, point);
+                }
 
-    }
+                paint = new Paint(basePaint);
+                paint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                paintMap.put(i, paint);
+                pieBeanMap.put(i, bean);
 
-    public ChartPie setPlayAnimator(boolean isPlayAnimator) {
-        this.isPlayAnimator = isPlayAnimator;
+
+                startAngle += bean.sweepAngle;
+            }
+        }
         return this;
+    }
+
+    /**
+     * 计算数据总和
+     *
+     * @param data
+     * @return
+     */
+    private float getTotal(List<ChartPieBean> data) {
+        if (data != null) {
+            float total = 0;
+            for (int i = 0; i < data.size(); i++) {
+                total += data.get(i).value;
+            }
+            return total;
+        }
+        return 0;
+    }
+
+    private void drawCenter(Canvas canvas) {
+        canvas.drawCircle(radius[0], radius[1], whiteR, centerPiePaint);
+    }
+
+    /**
+     * 已知圆弧半径，圆弧夹角，起始点坐标，怎么求终点坐标？
+     * 半径r,角度θ,圆弧中心(a,b)，起点坐标(x0,y0) 
+     * a,b请根据起点坐标折算成中心坐标
+     * x=a+r*cosθ
+     * y=b+r*sinθ
+     * 这两个函数中的θ 
+     * 都是指的“弧度”而非“角度”
+     * 弧度的计算公式为：2*PI/360*角度；30°角度的弧度= 2*PI/360*30 
+     * <p>
+     * 假设一个圆的圆心坐标是(a,b)，半径为r，则圆上每个点的
+     * X坐标=a + Math.sin(2*Math.PI / 360) * r ；
+     * Y坐标=b + Math.cos(2*Math.PI / 360) * r 
+     */
+    private void drawLines(Canvas canvas) {
+        if (mAnimatorValue == endAnimatorValue) {
+            float[] point;
+            double arcPI = Math.PI * 2 / 360;//π的值
+            for (int i = 0; i < pieBeanMap.size(); i++) {
+                ChartPieBean bean = pieBeanMap.get(i);
+                //计算当前圆弧上的中心点'
+                point = new float[2];
+                float angle = bean.startAngle + (bean.sweepAngle) / 2;
+                point[0] = (float) (radius[0] + pieR * Math.cos(arcPI * angle));
+                point[1] = (float) (radius[1] + pieR * Math.sin(arcPI * angle));
+
+                if (point[0] < radius[0] && point[1] < radius[1]) {//在圆心左上
+                    point[0] -= basePadding;
+                    point[1] -= basePadding;
+
+                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
+                    canvas.drawLine(point[0] - basePadding / 2, point[1] - basePadding / 2, point[0] - basePadding * 2, point[1] - basePadding * 1.5f, linePaint);
+                    canvas.drawLine(point[0] - basePadding * 2, point[1] - basePadding * 1.5f, startX, point[1] - basePadding * 1.5f, linePaint);
+
+                    textPaint.setTextAlign(Paint.Align.LEFT);
+                    canvas.drawText("123.00", startX, point[1] - basePadding * 2f, textPaint);
+                    canvas.drawText("押金使用", startX, point[1] + basePadding * 0.5f, textPaint);
+
+                } else if (point[0] < radius[0] && point[1] > radius[1]) {//在圆心 左下
+                    point[0] -= basePadding;
+                    point[1] += basePadding;
+
+                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
+                    canvas.drawLine(point[0] - basePadding / 2, point[1] + basePadding / 2, point[0] - basePadding * 2, point[1] + basePadding * 1.5f, linePaint);
+                    canvas.drawLine(point[0] - basePadding * 2, point[1] + basePadding * 1.5f, startX, point[1] + basePadding * 1.5f, linePaint);
+
+                    textPaint.setTextAlign(Paint.Align.LEFT);
+                    canvas.drawText("123.00", startX, point[1] + basePadding, textPaint);
+                    canvas.drawText("押金使用", startX, point[1] + basePadding * 3.5f, textPaint);
+
+                } else if (point[0] > radius[0] && point[1] > radius[1]) {//右下
+                    point[0] += basePadding;
+                    point[1] += basePadding;
+
+                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
+                    canvas.drawLine(point[0] + basePadding / 2, point[1] + basePadding / 2, point[0] + basePadding * 2, point[1] + basePadding * 1.5f, linePaint);
+                    canvas.drawLine(point[0] + basePadding * 2, point[1] + basePadding * 1.5f, endX, point[1] + basePadding * 1.5f, linePaint);
+
+                    textPaint.setTextAlign(Paint.Align.RIGHT);
+                    canvas.drawText("123.00", endX, point[1] + basePadding * 1f, textPaint);
+                    canvas.drawText("押金使用", endX, point[1] + basePadding * 3.5f, textPaint);
+
+                } else if (point[0] > radius[0] && point[1] < radius[1]) {//右上
+                    point[0] += basePadding;
+                    point[1] -= basePadding;
+
+                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
+                    canvas.drawLine(point[0] + basePadding / 2, point[1] - basePadding / 2, point[0] + basePadding * 2, point[1] - basePadding * 1.5f, linePaint);
+                    canvas.drawLine(point[0] + basePadding * 2, point[1] - basePadding * 1.5f, endX, point[1] - basePadding * 1.5f, linePaint);
+
+                    textPaint.setTextAlign(Paint.Align.RIGHT);
+                    canvas.drawText("123.00", endX, point[1] - basePadding * 2f, textPaint);
+                    canvas.drawText("押金使用", endX, point[1] + basePadding * 0.5f, textPaint);
+                }
+
+                arcPoints.put(i, point);
+                pointPaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                canvas.drawPoint(arcPoints.get(i)[0], arcPoints.get(i)[1], pointPaint);
+
+
+            }
+        }
     }
 
     public ChartPie setAnimDurationTime(long duration) {
@@ -190,34 +317,61 @@ public class ChartPie extends View {
     }
 
     private void startAnimator() {
-        valueAnimator = ValueAnimator.ofFloat(0, 360).setDuration(duration);
+        if (!isFirst) return;//只能绘制一次
+        if (starting) {
+            return;
+        }
+        starting = true;
+        valueAnimator = ValueAnimator.ofFloat(startAnimatorValue, endAnimatorValue).setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mAnimatorValue = (float) animation.getAnimatedValue();
-                invalidate();
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mAnimatorValue = (float) valueAnimator.getAnimatedValue();
+                if (starting) {
+                    invalidate();
+                }
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                starting = false;
+                isFirst = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
         valueAnimator.start();
     }
 
     public void start() {
-        startAnimator();
-    }
-
-    /**
-     * 检测制定View是否被遮住显示不全
-     *
-     * @return
-     */
-    protected boolean isCover(View view) {
-        Rect rect = new Rect();
-        if (view.getGlobalVisibleRect(rect)) {
-            if (rect.width() >= view.getMeasuredWidth() && rect.height() >= view.getMeasuredHeight()) {
-                return true;
-            }
+        super.start();
+        if (isCover(ChartPie.this)) {
+            startAnimator();
+        } else {
+            this.post(new Runnable() {//可以避免页面未初始化完成造成的 空白
+                @Override
+                public void run() {
+                    if (isCover(ChartPie.this)) {
+                        startAnimator();
+                    }
+                }
+            });
         }
-        return false;
     }
 
     @Override

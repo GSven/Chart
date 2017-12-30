@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chart</string>
+    <string name="app_name">汪琼</string>
 
     <!--保存的文件路径-->
     <string name="save_cache_file_folder_root">/mnt/sdcard/chart/cache/</string>

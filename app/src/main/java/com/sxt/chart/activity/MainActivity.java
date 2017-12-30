@@ -22,9 +22,9 @@ import com.sxt.chart.chart.BeizerCurveLine;
 import com.sxt.chart.chart.ChartBar;
 import com.sxt.chart.chart.ChartBean;
 import com.sxt.chart.chart.ChartPie;
+import com.sxt.chart.chart.ChartPieBean;
 import com.sxt.chart.chart.CircleProgressView;
 import com.sxt.chart.chart.LineOnScrollChangeListener;
-import com.sxt.chart.chart.RoundNumberView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity {
     private List<ChartBean> chartBeanList;
     private NestedScrollView scrollView;
     private LineOnScrollChangeListener onScrollChangeListener;
+    private List<ChartPieBean> pieBeanList;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -71,8 +72,8 @@ public class MainActivity extends BaseActivity {
 
         initViewPager();//轮播图
         initData();
-        for (int i = 0; i < 50; i++) {
-            if (i == 0) {
+        for (int i = 0; i < 100; i++) {
+            if (i <= 50) {
                 drawPie();
             } else if (i % 2 == 0) {
                 drawBar();//柱状图
@@ -161,19 +162,29 @@ public class MainActivity extends BaseActivity {
         chartBeanList0.add(new ChartBean("6", 10));
         chartBeanList0.add(new ChartBean("7", 30));
         chartBeanList0.add(new ChartBean("8", 5));
+
+        pieBeanList = new ArrayList<>();
+        pieBeanList.add(new ChartPieBean(R.color.green, 7300, 0, 0, 0));
+        pieBeanList.add(new ChartPieBean(R.color.blue_rgba_24_261_255, 3030, 0, 0, 0));
+        pieBeanList.add(new ChartPieBean(R.color.orange, 5000, 0, 0, 0));
+        pieBeanList.add(new ChartPieBean(R.color.red_2, 2090, 0, 0, 0));
+        pieBeanList.add(new ChartPieBean(R.color.progress_color_default, 1050, 0, 0, 0));
     }
 
     private void drawPie() {
-        //底部的曲线图
-        View child = View.inflate(this, R.layout.item_chart_num, null);
-        RoundNumberView view = child.findViewById(R.id.chart_number);
-        view.setText("1");
-        bottomListRoot.addView(child);
+//        //底部的曲线图
+//        View child = View.inflate(this, R.layout.item_chart_num, null);
+//        RoundNumberView view = child.findViewById(R.id.chart_number);
+//        view.setText("1");
+//        bottomListRoot.addView(child);
         //底部的曲线图
         View childAt = View.inflate(this, R.layout.item_chart_pie, null);
         bottomListRoot.addView(childAt);
-//        ChartPie chartPie = childAt.findViewById(R.id.chart_pie);
-//        chartPie.start();
+        ChartPie chartPie = childAt.findViewById(R.id.chart_pie);
+        chartPie.setData(pieBeanList).start();
+
+        //将当前曲线添加到ScrollView的滑动监听中
+        onScrollChangeListener.addLine(chartPie);
     }
 
     private void drawLine() {

@@ -8,19 +8,18 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.sxt.chart.R;
 import com.sxt.chart.utils.DateFormatUtil;
@@ -34,22 +33,8 @@ import java.util.Map;
  * Created by sxt on 2017/7/13.
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ChartBar extends View {
+public class ChartBar extends BaseChart {
 
-    public ChartBar(Context context) {
-        super(context);
-        init();
-    }
-
-    public ChartBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ChartBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
 
     private Paint basePaint;
     private Paint baseLabelPaint;
@@ -80,7 +65,20 @@ public class ChartBar extends View {
      */
     private Map<Integer, Integer> touchColors = new HashMap<>();
 
-    private void init() {
+    public ChartBar(Context context) {
+        super(context);
+    }
+
+    public ChartBar(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ChartBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public void init(Context context) {
+        super.init(context);
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setColor(Color.GRAY);
         basePaint.setStrokeWidth(dip2px(0.5f));
@@ -126,6 +124,7 @@ public class ChartBar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         drawNoTouch(canvas);
         if (onTouch && animatedValue == 1.0) {//曲线绘制完成之后才能进行触摸绘制
             drawOnTouch(canvas);
@@ -439,6 +438,7 @@ public class ChartBar extends View {
     }
 
     public void start() {
+        super.start();
         if (isCover(ChartBar.this)) {
             startAnimator();
         } else {
@@ -499,21 +499,4 @@ public class ChartBar extends View {
         });
         valueAnimator.start();
     }
-
-
-    /**
-     * 检测制定View是否被遮住显示不全
-     *
-     * @return
-     */
-    protected boolean isCover(View view) {
-        Rect rect = new Rect();
-        if (view.getGlobalVisibleRect(rect)) {
-            if (rect.width() >= view.getMeasuredWidth() && rect.height() >= view.getMeasuredHeight()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

@@ -39,7 +39,7 @@ import java.util.Map;
  * Created by sxt on 2017/8/5.
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class BeizerCurveLine extends View {
+public class BeizerCurveLine extends BaseChart {
 
     private Paint basePaint;
     private Paint baseLabelPaint;
@@ -153,20 +153,19 @@ public class BeizerCurveLine extends View {
 
     public BeizerCurveLine(Context context) {
         super(context);
-        init();
     }
 
     public BeizerCurveLine(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public BeizerCurveLine(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
-    private void init() {
+    @Override
+    public void init(Context context) {
+        super.init(context);
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setColor(Color.GRAY);
         basePaint.setStrokeWidth(dip2px(0.5f));
@@ -214,7 +213,7 @@ public class BeizerCurveLine extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
             startX = getPaddingLeft() + basePadding;
-            endX = getMeasuredWidth() - getPaddingRight()-basePadding;
+            endX = getMeasuredWidth() - getPaddingRight() - basePadding;
             startY = getMeasuredHeight() - getPaddingBottom() - basePadding * 3;
             endY = getPaddingTop() + basePadding * 4;
         }
@@ -850,7 +849,9 @@ public class BeizerCurveLine extends View {
         }
     }
 
+    @Override
     public void start() {
+        super.start();
         if (isCover(BeizerCurveLine.this)) {
             startDraw();
         } else {
@@ -900,21 +901,6 @@ public class BeizerCurveLine extends View {
             }
         });
         valueAnimator.start();
-    }
-
-    /**
-     * 检测制定View是否被遮住显示不全
-     *
-     * @return
-     */
-    protected boolean isCover(View view) {
-        Rect rect = new Rect();
-        if (view.getGlobalVisibleRect(rect)) {
-            if (rect.width() >= view.getMeasuredWidth() && rect.height() >= view.getMeasuredHeight()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

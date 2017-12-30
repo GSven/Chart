@@ -100,7 +100,7 @@ public class AddWorkerFragment extends BaseFragment implements View.OnClickListe
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.wifi_setting_content, fragment, SelectWorkerWiFiFragment.class.getName())
-                        .addToBackStack(SelectWorkerWiFiFragment.class.getName())
+//                        .addToBackStack(SelectWorkerWiFiFragment.class.getName())
                         .commit();
                 break;
 

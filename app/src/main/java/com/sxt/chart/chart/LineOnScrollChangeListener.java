@@ -36,10 +36,13 @@ public class LineOnScrollChangeListener implements View.OnScrollChangeListener {
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
         if (lines != null && lines.size() > 0) {
             for (int j = 0; j < lines.size(); j++) {
-                if (lines.get(j) instanceof BeizerCurveLine) {
-                    ((BeizerCurveLine) lines.get(j)).start();
-                } else if (lines.get(j) instanceof ChartBar) {
-                    ((ChartBar) lines.get(j)).start();
+//                if (lines.get(j) instanceof BeizerCurveLine) {
+//                    ((BeizerCurveLine) lines.get(j)).start();
+//                } else if (lines.get(j) instanceof ChartBar) {
+//                    ((ChartBar) lines.get(j)).start();
+//                }
+                if (lines.get(j) instanceof BaseChart) {
+                    ((BaseChart) lines.get(j)).start();
                 }
             }
         }

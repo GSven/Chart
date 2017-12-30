@@ -10,11 +10,11 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.sxt.chart"
         minSdkVersion 15
-        targetSdkVersion 22//android6.0  -  23
+        targetSdkVersion 26//android6.0  -  23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
