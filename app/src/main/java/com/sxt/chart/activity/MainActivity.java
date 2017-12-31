@@ -73,12 +73,18 @@ public class MainActivity extends BaseActivity {
         initViewPager();//轮播图
         initData();
         for (int i = 0; i < 100; i++) {
-            if (i <= 50) {
+            if (i < 2) {
+                drawPie();
+            } else if (i < 3) {
+                drawBar();
+            } else if (i < 5) {
+                drawLine();
+            } else if (i < 9) {
                 drawPie();
             } else if (i % 2 == 0) {
-                drawBar();//柱状图
-            } else {
                 drawLine();//曲线
+            } else {
+                drawPie();
             }
         }
 
@@ -164,11 +170,11 @@ public class MainActivity extends BaseActivity {
         chartBeanList0.add(new ChartBean("8", 5));
 
         pieBeanList = new ArrayList<>();
-        pieBeanList.add(new ChartPieBean(R.color.green, 7300, 0, 0, 0));
-        pieBeanList.add(new ChartPieBean(R.color.blue_rgba_24_261_255, 3030, 0, 0, 0));
-        pieBeanList.add(new ChartPieBean(R.color.orange, 5000, 0, 0, 0));
-        pieBeanList.add(new ChartPieBean(R.color.red_2, 2090, 0, 0, 0));
-        pieBeanList.add(new ChartPieBean(R.color.progress_color_default, 1050, 0, 0, 0));
+        pieBeanList.add(new ChartPieBean(3090, "押金使用", R.color.green));
+        pieBeanList.add(new ChartPieBean(501f, "天猫购物", R.color.blue_rgba_24_261_255));
+        pieBeanList.add(new ChartPieBean(800, "话费充值", R.color.orange));
+        pieBeanList.add(new ChartPieBean(1000, "生活缴费", R.color.red_2));
+        pieBeanList.add(new ChartPieBean(2300, "早餐", R.color.progress_color_default));
     }
 
     private void drawPie() {

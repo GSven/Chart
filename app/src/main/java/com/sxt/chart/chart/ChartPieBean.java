@@ -6,20 +6,19 @@ package com.sxt.chart.chart;
 
 public class ChartPieBean {
 
-    public int colorRes;
     public float value;
+    public String type;
     public float rate;
+    public int colorRes;
     public float startAngle;
     public float sweepAngle;
 
     public ChartPieBean() {
     }
 
-    public ChartPieBean(int colorRes, float value, float rate, float startAngle, float sweepAngle) {
-        this.colorRes = colorRes;
+    public ChartPieBean(float value, String type, int colorRes) {
         this.value = value;
-        this.rate = rate;
-        this.startAngle = startAngle;
-        this.sweepAngle = sweepAngle;
+        this.type = type;
+        this.colorRes = colorRes;
     }
 }

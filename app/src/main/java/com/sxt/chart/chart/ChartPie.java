@@ -24,6 +24,12 @@ import java.util.Map;
 
 /**
  * Created by sxt on 2017/8/5.
+ * 主要包含以下处理点:
+ *
+ * 1.仅绘制可视区域
+ * 2.饼状图动画
+ * 3.辅助线位置限定
+ * 4.辅助文字坐标纠正
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class ChartPie extends BaseChart {
@@ -128,10 +134,12 @@ public class ChartPie extends BaseChart {
             startY = getMeasuredHeight() - getPaddingBottom() - basePadding;
             endY = getPaddingTop() + basePadding;
             radius = new float[2];
-            radius[0] = startX + (endX - startX) / 2;
-            radius[1] = endY + (startY - endY) / 2;
-            whiteR = (endX - startX) / 10;
-            pieR = (endX - startX) / 4;
+            float R1 = startY - endY;
+            float R2 = endX - -startX;
+            radius[0] = startX + R2 / 2;
+            radius[1] = endY + R1 / 2;
+            whiteR = R1 > R2 ? R2 / 10 : R1 / 12;//宽度>高度  选择高度 , 宽度<高度 选择宽度  , 能避免在大屏下坐标越界
+            pieR = R1 > R2 ? R2 / 4 : R1 / 4;
             areaArc = new RectF(radius[0] - pieR, radius[1] - pieR, radius[0] + pieR, radius[1] + pieR);
         }
     }
@@ -234,7 +242,14 @@ public class ChartPie extends BaseChart {
     private void drawLines(Canvas canvas) {
         if (mAnimatorValue == endAnimatorValue) {
             float[] point;
+            float startX;
+            float startY;
+            float stopX;
+            float stopY;
             double arcPI = Math.PI * 2 / 360;//π的值
+            Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+            float height = fontMetrics.bottom - fontMetrics.top;//计算行高
+
             for (int i = 0; i < pieBeanMap.size(); i++) {
                 ChartPieBean bean = pieBeanMap.get(i);
                 //计算当前圆弧上的中心点'
@@ -244,59 +259,77 @@ public class ChartPie extends BaseChart {
                 point[1] = (float) (radius[1] + pieR * Math.sin(arcPI * angle));
 
                 if (point[0] < radius[0] && point[1] < radius[1]) {//在圆心左上
+
                     point[0] -= basePadding;
                     point[1] -= basePadding;
+                    startX = point[0] - basePadding / 2;
+                    startY = point[1] - basePadding / 2;
+                    stopX = point[0] - basePadding * 2;
+                    stopY = point[1] - basePadding * 1.5f;
 
-                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
-                    canvas.drawLine(point[0] - basePadding / 2, point[1] - basePadding / 2, point[0] - basePadding * 2, point[1] - basePadding * 1.5f, linePaint);
-                    canvas.drawLine(point[0] - basePadding * 2, point[1] - basePadding * 1.5f, startX, point[1] - basePadding * 1.5f, linePaint);
+                    linePaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                    canvas.drawLine(startX, startY, stopX, stopY, linePaint);
+                    canvas.drawLine(stopX, stopY, this.startX, stopY, linePaint);
 
                     textPaint.setTextAlign(Paint.Align.LEFT);
-                    canvas.drawText("123.00", startX, point[1] - basePadding * 2f, textPaint);
-                    canvas.drawText("押金使用", startX, point[1] + basePadding * 0.5f, textPaint);
+                    canvas.drawText(String.valueOf(bean.value), this.startX, stopY - height / 4, textPaint);
+                    canvas.drawText(bean.type, this.startX, stopY + height / 4 * 3, textPaint);
 
                 } else if (point[0] < radius[0] && point[1] > radius[1]) {//在圆心 左下
+
                     point[0] -= basePadding;
                     point[1] += basePadding;
+                    startX = point[0] - basePadding / 2;
+                    startY = point[1] + basePadding / 2;
+                    stopX = point[0] - basePadding * 2;
+                    stopY = point[1] + basePadding * 1.5f;
 
-                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
-                    canvas.drawLine(point[0] - basePadding / 2, point[1] + basePadding / 2, point[0] - basePadding * 2, point[1] + basePadding * 1.5f, linePaint);
-                    canvas.drawLine(point[0] - basePadding * 2, point[1] + basePadding * 1.5f, startX, point[1] + basePadding * 1.5f, linePaint);
+                    linePaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                    canvas.drawLine(startX, startY, stopX, stopY, linePaint);
+                    canvas.drawLine(stopX, stopY, this.startX, stopY, linePaint);
 
                     textPaint.setTextAlign(Paint.Align.LEFT);
-                    canvas.drawText("123.00", startX, point[1] + basePadding, textPaint);
-                    canvas.drawText("押金使用", startX, point[1] + basePadding * 3.5f, textPaint);
+                    canvas.drawText(String.valueOf(bean.value), this.startX, stopY - height / 4, textPaint);
+                    canvas.drawText(bean.type, this.startX, stopY + height / 4 * 3, textPaint);
 
                 } else if (point[0] > radius[0] && point[1] > radius[1]) {//右下
+
                     point[0] += basePadding;
                     point[1] += basePadding;
+                    startX = point[0] + basePadding / 2;
+                    startY = point[1] + basePadding / 2;
+                    stopX = point[0] + basePadding * 2;
+                    stopY = point[1] + basePadding * 1.5f;
 
-                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
-                    canvas.drawLine(point[0] + basePadding / 2, point[1] + basePadding / 2, point[0] + basePadding * 2, point[1] + basePadding * 1.5f, linePaint);
-                    canvas.drawLine(point[0] + basePadding * 2, point[1] + basePadding * 1.5f, endX, point[1] + basePadding * 1.5f, linePaint);
+                    linePaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                    canvas.drawLine(startX, startY, stopX, stopY, linePaint);
+                    canvas.drawLine(stopX, stopY, endX, stopY, linePaint);
 
                     textPaint.setTextAlign(Paint.Align.RIGHT);
-                    canvas.drawText("123.00", endX, point[1] + basePadding * 1f, textPaint);
-                    canvas.drawText("押金使用", endX, point[1] + basePadding * 3.5f, textPaint);
+                    canvas.drawText(String.valueOf(bean.value), this.endX, stopY - height / 4, textPaint);
+                    canvas.drawText(bean.type, this.endX, stopY + height / 4 * 3, textPaint);
 
                 } else if (point[0] > radius[0] && point[1] < radius[1]) {//右上
+
                     point[0] += basePadding;
                     point[1] -= basePadding;
+                    startX = point[0] + basePadding / 2;
+                    startY = point[1] - basePadding / 2;
+                    stopX = point[0] + basePadding * 2;
+                    stopY = point[1] - basePadding * 1.5f;
 
-                    linePaint.setColor(ContextCompat.getColor(getContext(),bean.colorRes));
-                    canvas.drawLine(point[0] + basePadding / 2, point[1] - basePadding / 2, point[0] + basePadding * 2, point[1] - basePadding * 1.5f, linePaint);
-                    canvas.drawLine(point[0] + basePadding * 2, point[1] - basePadding * 1.5f, endX, point[1] - basePadding * 1.5f, linePaint);
+                    linePaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
+                    canvas.drawLine(startX, startY, stopX, stopY, linePaint);
+                    canvas.drawLine(stopX, stopY, endX, stopY, linePaint);
 
                     textPaint.setTextAlign(Paint.Align.RIGHT);
-                    canvas.drawText("123.00", endX, point[1] - basePadding * 2f, textPaint);
-                    canvas.drawText("押金使用", endX, point[1] + basePadding * 0.5f, textPaint);
+                    canvas.drawText(String.valueOf(bean.value), this.endX, stopY - height / 4, textPaint);
+                    canvas.drawText(bean.type, this.endX, stopY + height / 4 * 3, textPaint);
                 }
 
                 arcPoints.put(i, point);
                 pointPaint.setColor(ContextCompat.getColor(getContext(), bean.colorRes));
                 canvas.drawPoint(arcPoints.get(i)[0], arcPoints.get(i)[1], pointPaint);
-
-
             }
         }
     }
