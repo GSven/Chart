@@ -25,6 +25,7 @@ import com.sxt.chart.chart.ChartPie;
 import com.sxt.chart.chart.ChartPieBean;
 import com.sxt.chart.chart.CircleProgressView;
 import com.sxt.chart.chart.LineOnScrollChangeListener;
+import com.sxt.chart.chart.RoundNumberView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -178,11 +179,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void drawPie() {
-//        //底部的曲线图
-//        View child = View.inflate(this, R.layout.item_chart_num, null);
-//        RoundNumberView view = child.findViewById(R.id.chart_number);
-//        view.setText("1");
-//        bottomListRoot.addView(child);
+        //底部的曲线图
+        View child = View.inflate(this, R.layout.item_chart_num, null);
+        RoundNumberView view = child.findViewById(R.id.chart_number);
+        view.setText("2");
+        bottomListRoot.addView(child);
         //底部的曲线图
         View childAt = View.inflate(this, R.layout.item_chart_pie, null);
         bottomListRoot.addView(childAt);
