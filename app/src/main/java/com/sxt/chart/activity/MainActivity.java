@@ -93,8 +93,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void wifi(View view) {
-        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
+//        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
 //        startActivity(new Intent(getApplicationContext(), DragerActivity.class));
+        startActivity(new Intent(this,RefreshActivity.class));
     }
 
 

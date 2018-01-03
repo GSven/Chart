@@ -13,10 +13,10 @@ import java.util.List;
 
 public abstract class ListViewAdapter<T> extends BaseAdapter {
 
-    private Context context;
-    private List<T> dates;
+    protected Context context;
+    protected List<T> dates;
 
-    private void BasePagerAdapter(Context context, List<T> dates) {
+    public ListViewAdapter(Context context, List<T> dates) {
         this.context = context;
         this.dates = dates;
     }
