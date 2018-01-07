@@ -95,7 +95,8 @@ public class MainActivity extends BaseActivity {
     public void wifi(View view) {
 //        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
 //        startActivity(new Intent(getApplicationContext(), DragerActivity.class));
-        startActivity(new Intent(this,RefreshActivity.class));
+//        startActivity(new Intent(this,RefreshActivity.class));
+        startActivity(new Intent(this,ViewTypeActivity.class));
     }
 
 
@@ -180,11 +181,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void drawPie() {
-        //底部的曲线图
-        View child = View.inflate(this, R.layout.item_chart_num, null);
-        RoundNumberView view = child.findViewById(R.id.chart_number);
-        view.setText("2");
-        bottomListRoot.addView(child);
+//        //底部的曲线图
+//        View child = View.inflate(this, R.layout.item_chart_num, null);
+//        RoundNumberView view = child.findViewById(R.id.chart_number);
+//        view.setText("2");
+//        bottomListRoot.addView(child);
         //底部的曲线图
         View childAt = View.inflate(this, R.layout.item_chart_pie, null);
         bottomListRoot.addView(childAt);
