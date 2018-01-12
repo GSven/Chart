@@ -73,4 +73,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="Custom_DatePicker_style" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:editTextStyle">@style/Widget.EditText.Custom_color</item>
+    </style><style name="Widget.EditText.Custom_color" parent="@android:style/Widget.EditText">
+    <item name="android:textColor">#1696c7</item></style>
+
+
 </resources>

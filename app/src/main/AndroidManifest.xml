@@ -36,7 +36,7 @@
 
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.WifiSettingActivity" />
-        <activity android:name=".activity.RefreshActivity" />
+        <activity android:name=".activity.PullToRefreshActivity" />
 
         <receiver
             android:name=".activity.WatchDogReceiver"
@@ -53,6 +53,7 @@
         <activity android:name=".activity.DragerActivity" />
         <activity android:name=".activity.ViewTypeActivity" />
         <activity android:name=".activity.ScoreMsgActivity" />
+        <activity android:name=".activity.SmartRefreshActivity" />
     </application>
 
 </manifest>

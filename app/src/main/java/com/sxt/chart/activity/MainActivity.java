@@ -25,7 +25,6 @@ import com.sxt.chart.chart.ChartPie;
 import com.sxt.chart.chart.ChartPieBean;
 import com.sxt.chart.chart.CircleProgressView;
 import com.sxt.chart.chart.LineOnScrollChangeListener;
-import com.sxt.chart.chart.RoundNumberView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,8 +94,9 @@ public class MainActivity extends BaseActivity {
     public void wifi(View view) {
 //        startActivity(new Intent(getApplicationContext(), WifiSettingActivity.class));
 //        startActivity(new Intent(getApplicationContext(), DragerActivity.class));
-//        startActivity(new Intent(this,RefreshActivity.class));
-        startActivity(new Intent(this,ViewTypeActivity.class));
+//        startActivity(new Intent(this,PullToRefreshActivity.class));
+//        startActivity(new Intent(this, ViewTypeActivity.class));
+        startActivity(new Intent(this, SmartRefreshActivity.class));
     }
 
 
