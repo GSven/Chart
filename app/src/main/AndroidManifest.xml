@@ -53,7 +53,7 @@
         <activity android:name=".activity.DragerActivity" />
         <activity android:name=".activity.ViewTypeActivity" />
         <activity android:name=".activity.ScoreMsgActivity" />
-        <activity android:name=".activity.SmartRefreshActivity" />
+        <activity android:name=".activity.SmartRefreshActivity"  />
     </application>
 
 </manifest>
