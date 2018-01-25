@@ -20,6 +20,7 @@ public class ScoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<String> data;
     private Context context;
 
+
     public ScoreMsgAdapter(Context context, List<String> data) {
         this.data = data;
         this.context = context;

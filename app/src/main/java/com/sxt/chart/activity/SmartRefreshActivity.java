@@ -59,9 +59,9 @@ public class SmartRefreshActivity extends AppCompatActivity {
 
         viewPager.getViewPager().setClipChildren(false);//不裁剪childView
 //        viewPager.getViewPager().setPadding(40, 0, 40, 0);
-        viewPager.getViewPager().setPageMargin(Px2DpUtil.dip2px(this, 80));
+        viewPager.getViewPager().setPageMargin(Px2DpUtil.dip2px(this, -40));
 //        ViewGroup.LayoutParams lp = viewPager.getViewPager().getLayoutParams();
-//        lp.width = getWindowManager().getDefaultDisplay().getWidth() - Px2DpUtil.dip2px(this, 100);
+//        lp.width = getWindowManager().getDefaultDisplay().getWidth() - Px2DpUtil.dip2px(this, 20);
 //        viewPager.getViewPager().setLayoutParams(lp);
         viewPager
                 .setAdapter(new ImagePagerAdapter(this, data))

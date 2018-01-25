@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.sxt.chart.view.HorizontalselectedView
+        android:id="@+id/scrollText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:HorizontalselectedViewSeesize="6"
+        app:HorizontalselectedViewSelectedTextColor="@color/main_blue"
+        app:HorizontalselectedViewSelectedTextSize="60"
+        app:HorizontalselectedViewTextColor="@color/text_color_2"
+        app:HorizontalselectedViewTextSize="50" />
+
+
+</LinearLayout>

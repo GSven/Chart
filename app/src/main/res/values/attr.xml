@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="GifTextureView">
-        <attr name="gifSource" format="reference|string"/>
-        <attr name="isOpaque" format="boolean"/>
+        <attr name="gifSource" format="reference|string" />
+        <attr name="isOpaque" format="boolean" />
     </declare-styleable>
     <declare-styleable name="GifView">
-        <attr name="freezesAnimation" format="boolean"/>
-        <attr name="loopCount" format="integer"/>
+        <attr name="freezesAnimation" format="boolean" />
+        <attr name="loopCount" format="integer" />
     </declare-styleable>
 
     <!--自定义的小红点属性-->
@@ -24,4 +24,20 @@
         <!-- 圆角矩形宽高相等,取较宽高中大值-->
         <attr name="mv_isWidthHeightEqual" format="boolean" />
     </declare-styleable>
+
+
+    <declare-styleable name="HorizontalselectedView">
+        <!--可见数目-->
+        <attr name="HorizontalselectedViewSeesize" format="integer"></attr>
+        <!--被选择文字的大小和颜色-->
+        <attr name="HorizontalselectedViewSelectedTextSize" format="float"></attr>
+        <attr name="HorizontalselectedViewSelectedTextColor" format="color|reference"></attr>
+
+        <!--未被被选择文字的大小和颜色-->
+        <attr name="HorizontalselectedViewTextSize" format="float"></attr>
+
+        <attr name="HorizontalselectedViewTextColor" format="color|reference"></attr>
+
+    </declare-styleable>
+
 </resources>

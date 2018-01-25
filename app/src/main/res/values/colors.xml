@@ -12,6 +12,8 @@
     <color name="text_color_2">#666666</color>
     <color name="text_color_3">#999999</color>
 
+    <color name="main_blue">#678BFD</color>
+
     <color name="yellow_rgb_253_202_78">#FDCA4E</color>
     <color name="yellow_rgb_255_155_46">#FF9B2E</color>
     <color name="violet_rgb_111_51_199">#6F33C7</color>
