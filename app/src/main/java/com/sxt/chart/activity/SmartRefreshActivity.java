@@ -15,6 +15,8 @@ import com.sxt.banner.library.adapter.BaseCyclePagerAdapter;
 import com.sxt.chart.R;
 import com.sxt.chart.adapter.ImagePagerAdapter;
 import com.sxt.chart.utils.Px2DpUtil;
+import com.sxt.chart.view.DepthPageTransformer;
+import com.sxt.chart.view.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +59,10 @@ public class SmartRefreshActivity extends AppCompatActivity {
         data.add(R.mipmap.g);
         data.add(R.mipmap.h);
 
+        viewPager.getViewPager().setPageTransformer(false,new ZoomOutPageTransformer());
         viewPager.getViewPager().setClipChildren(false);//不裁剪childView
 //        viewPager.getViewPager().setPadding(40, 0, 40, 0);
-        viewPager.getViewPager().setPageMargin(Px2DpUtil.dip2px(this, -40));
+        //viewPager.getViewPager().setPageMargin(Px2DpUtil.dip2px(this, -40));
 //        ViewGroup.LayoutParams lp = viewPager.getViewPager().getLayoutParams();
 //        lp.width = getWindowManager().getDefaultDisplay().getWidth() - Px2DpUtil.dip2px(this, 20);
 //        viewPager.getViewPager().setLayoutParams(lp);
