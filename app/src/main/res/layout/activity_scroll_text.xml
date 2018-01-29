@@ -38,6 +38,27 @@
 
         <include layout="@layout/item_ruler" />
 
+        <com.sxt.chart.view.RuleView
+            android:id="@+id/ruleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <com.sxt.chart.view.MyHorizontalScrollView
+            android:id="@+id/hor_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:scrollbars="none">
+
+            <com.sxt.chart.view.RuleView
+                android:id="@+id/rule_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-20dp" />
+        </com.sxt.chart.view.MyHorizontalScrollView>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
