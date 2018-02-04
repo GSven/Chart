@@ -12,6 +12,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/pulltorefresh" />
             <option value="$PROJECT_DIR$/refresh-layout" />
+            <option value="$PROJECT_DIR$/suitLine" />
+            <option value="$PROJECT_DIR$/suitLine/line" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

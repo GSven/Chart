@@ -39,12 +39,14 @@
         <include layout="@layout/item_ruler" />
 
         <com.sxt.chart.view.RuleView
+            android:visibility="gone"
             android:id="@+id/ruleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
 
         <com.sxt.chart.view.MyHorizontalScrollView
+            android:visibility="gone"
             android:id="@+id/hor_scrollview"
             android:layout_width="match_parent"
             android:layout_height="60dp"
