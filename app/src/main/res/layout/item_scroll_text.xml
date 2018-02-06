@@ -5,17 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.sxt.chart.view.HorizontalselectedView
-        android:id="@+id/scrollText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:HorizontalselectedViewSeesize="6"
-        android:visibility="gone"
-        app:HorizontalselectedViewSelectedTextColor="@color/main_blue"
-        app:HorizontalselectedViewSelectedTextSize="60"
-        app:HorizontalselectedViewTextColor="@color/text_color_2"
-        app:HorizontalselectedViewTextSize="50" />
-
     <com.sxt.chart.view.StringScrollPicker
         android:id="@+id/scrollPicker"
         android:layout_width="match_parent"
@@ -25,7 +14,7 @@
         app:spv_max_text_size="26dp"
         app:spv_min_text_size="17dp"
         app:spv_orientation="horizontal"
-        app:spv_visible_item_count="5" />
+        app:spv_visible_item_count="80" />
 
 
 </LinearLayout>

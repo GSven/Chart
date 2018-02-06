@@ -72,7 +72,7 @@ public class RulerView extends View {
 
     private int page;
     private List<String> data;
-    private float minValue = 0, maxValue = 101;
+    private float minValue = 0, maxValue = 100;
     private float mItemWidth = Px2DpUtil.dip2px(getContext(), 6);
     private List<float[]> scaleLines = new ArrayList<>();
     private List<String[]> scaleTexts = new ArrayList<>();
@@ -106,7 +106,7 @@ public class RulerView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        rulerWidth = (int) ((maxValue + 1 - minValue) * mItemWidth + basePadding);
+        rulerWidth = (int) ((maxValue + 1 - minValue)/2 * mItemWidth);
         if (rulerWidth < widthMeasureSpec) {
             rulerWidth = widthMeasureSpec;
         }
@@ -225,37 +225,41 @@ public class RulerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mGestureDetector.onTouchEvent(event)) {
-            return true;
-        }
+//        if (mGestureDetector.onTouchEvent(event)) {
+//            return true;
+//        }
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLastMoveY = event.getY();
+                mLastMoveX = event.getX();
+                break;
+
             case MotionEvent.ACTION_MOVE:
                 float offsetX = event.getX() - mLastMoveX;
                 mLastMoveX = event.getX();
                 mLastMoveY = event.getY();
 
-                if (Math.abs(offsetX) > touchSlop) {
-                    if (getScrollX() + offsetX < leftBorder) {
-                        scrollTo((int) leftBorder, 0);
-                        return true;
-                    }
-                    if (getScrollX() + offsetX > rightBorder) {
-                        scrollTo((int) rightBorder, 0);
-                        return true;
-                    }
-
+//                if (Math.abs(offsetX) > touchSlop) {
+//                    if (getScrollX() + offsetX < leftBorder) {
+//                        scrollTo((int) leftBorder, 0);
+//                        return true;
+//                    }
+//                    if (getScrollX() + offsetX > rightBorder) {
+//                        scrollTo((int) rightBorder, 0);
+//                        return true;
+//                    }
                     scrollBy((int) offsetX, 0);
                     invalidate();
 
-                } else {
-                    return true;
-                }
+
+//                } else {
+//                    return super.onTouchEvent(event);
+//                }
 
                 break;
             case MotionEvent.ACTION_UP:
                 mLastMoveX = event.getX();
                 mLastMoveY = event.getY();
-//                mScroller.startScroll((int) leftBorder, 0, (int) rightBorder, 0);
                 break;
         }
         return super.onTouchEvent(event);
@@ -272,20 +276,6 @@ public class RulerView extends View {
     }
 
     private class FlingOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        public boolean onDown(MotionEvent e) {
-            // 不允许父组件拦截事件
-            ViewParent parent = getParent();
-            if (parent != null) {
-                parent.requestDisallowInterceptTouchEvent(true);
-            }
-            // 点击时取消所有滚动效果
-            cancelScroll();
-            mLastMoveY = e.getY();
-            mLastMoveX = e.getX();
-            return true;
-        }
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, final float velocityY) {
             // 惯性滑动
@@ -296,8 +286,6 @@ public class RulerView extends View {
     }
 
     public void cancelScroll() {
-        mLastScrollY = 0;
-        mLastScrollX = 0;
         mScroller.abortAnimation();
     }
 
@@ -314,8 +302,8 @@ public class RulerView extends View {
     private void fling(float from, float vel) {
         mLastScrollX = (int) from;
         // 最多可以惯性滑动20个item
-        mScroller.fling((int) from, 0, (int) vel, 0, -20 * (int) mItemWidth,
-                20 * (int) mItemWidth, 0, 0);
+        mScroller.fling((int) from, 0, (int) vel, 0, -50 * (int) mItemWidth,
+                50 * (int) mItemWidth, 0, 0);
         invalidate();
     }
 
