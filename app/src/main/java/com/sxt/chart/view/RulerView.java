@@ -2,6 +2,7 @@ package com.sxt.chart.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
@@ -49,6 +50,7 @@ public class RulerView extends View {
     private float startY;
     private float endX;
     private float endY;
+    private float mMoveLength;
     private float basePadding = 50;
     private float indicatorWidth = basePadding / 3;
     private float indicatorHigth = basePadding / 2;
@@ -60,9 +62,16 @@ public class RulerView extends View {
     private int touchSlop;
     private float leftBorder, rightBorder;
     private int rulerWidth;
+
+    private int mCenterPosition = -1; // 中间item的位置，0<=mCenterPosition＜mVisibleItemCount，默认为 mVisibleItemCount / 2
+    private int mCenterY; // 中间item的起始坐标y(不考虑偏移),当垂直滚动时，y= mCenterPosition*mItemHeight
+    private int mCenterX; // 中间item的起始坐标x(不考虑偏移),当垂直滚动时，x = mCenterPosition*mItemWidth
+    private int mCenterPoint; // 当垂直滚动时，mCenterPoint = mCenterY;水平滚动时，mCenterPoint = mCenterX
     private float mLastMoveY; // 触摸的坐标y
     private float mLastMoveX; // 触摸的坐标X
     private boolean mIsMovingCenter; // 是否正在滑向中间
+    private boolean mIsFling; // 是否正在惯性滑动
+
     // 可以把scroller看做模拟的触屏滑动操作，mLastScrollY为上次触屏滑动的坐标
     private int mLastScrollY = 0; // Scroller的坐标y
     private int mLastScrollX = 0; // Scroller的坐标x
@@ -72,7 +81,7 @@ public class RulerView extends View {
 
     private int page;
     private List<String> data;
-    private float minValue = 0, maxValue = 100;
+    private float minValue = 0, maxValue = 101;
     private float mItemWidth = Px2DpUtil.dip2px(getContext(), 6);
     private List<float[]> scaleLines = new ArrayList<>();
     private List<String[]> scaleTexts = new ArrayList<>();
@@ -106,7 +115,7 @@ public class RulerView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        rulerWidth = (int) ((maxValue + 1 - minValue)/2 * mItemWidth);
+        rulerWidth = (int) ((maxValue - minValue - 1) * mItemWidth);
         if (rulerWidth < widthMeasureSpec) {
             rulerWidth = widthMeasureSpec;
         }
@@ -123,8 +132,8 @@ public class RulerView extends View {
             endY = getPaddingTop() + basePadding;
             page = (int) (rulerWidth / (endX - startX));
 
-            leftBorder = startX - (maxValue - minValue - 1) * mItemWidth / 2;
-            rightBorder = endX + rulerWidth;
+            leftBorder = startX - (endX - startX) / 2;
+            rightBorder = startX + rulerWidth;
         }
     }
 
@@ -219,50 +228,124 @@ public class RulerView extends View {
 //
 //        RectF ova2 = new RectF(startX, startY, endX, startY);
 //        canvas.drawArc(ova2, -180, 180, false, new Paint(basePaint));
-        canvas.drawLine(startX, endY, startX + rulerWidth, endY, basePaint);
-        canvas.drawLine(startX, startY - basePadding, startX + rulerWidth, startY - basePadding, basePaint);
+        if (scaleLines.size() > 0) {
+            canvas.drawLine(startX, endY, scaleLines.get(scaleLines.size() - 1)[2], endY, basePaint);
+            canvas.drawLine(startX, startY - basePadding, scaleLines.get(scaleLines.size() - 1)[2], startY - basePadding, basePaint);
+        }
+        Paint paint = new Paint(basePaint);
+        paint.setColor(Color.RED);
+        canvas.drawLine(leftBorder, startY - 2 * basePadding, rightBorder, startY - 2 * basePadding, paint);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
 //        if (mGestureDetector.onTouchEvent(event)) {
 //            return true;
 //        }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mLastMoveY = event.getY();
-                mLastMoveX = event.getX();
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                float offsetX = event.getX() - mLastMoveX;
-                mLastMoveX = event.getX();
-                mLastMoveY = event.getY();
-
-//                if (Math.abs(offsetX) > touchSlop) {
-//                    if (getScrollX() + offsetX < leftBorder) {
-//                        scrollTo((int) leftBorder, 0);
-//                        return true;
-//                    }
-//                    if (getScrollX() + offsetX > rightBorder) {
-//                        scrollTo((int) rightBorder, 0);
-//                        return true;
-//                    }
-                    scrollBy((int) offsetX, 0);
-                    invalidate();
-
-
-//                } else {
-//                    return super.onTouchEvent(event);
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                mLastMoveY = event.getY();
+//                mLastMoveX = event.getX();
+//                break;
+//
+//            case MotionEvent.ACTION_MOVE:
+//                mMoveLength = event.getX() - mLastMoveX;
+//                mLastMoveX = event.getX();
+//                mLastMoveY = event.getY();
+//
+//
+//                if (getScrollX() + mMoveLength < leftBorder) {
+//                    scrollTo((int) leftBorder, 0);
+//                    return true;
 //                }
+//                if (getScrollX() + mMoveLength > rightBorder) {
+//                    scrollTo((int) rightBorder, 0);
+//                    return true;
+//                }
+//
+//                scrollBy((int) mMoveLength, 0);
+//                invalidate();
+//
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                mLastMoveX = event.getX();
+//                mLastMoveY = event.getY();
+//
+////                if (getScrollX() + mMoveLength < leftBorder) {
+////                    scrollTo((int) leftBorder, 0);
+////                    return true;
+////                }
+////                if (getScrollX() + mMoveLength > rightBorder) {
+////                    scrollTo((int) rightBorder, 0);
+////                    return true;
+////                }
+//
+////                mScroller.startScroll((int) startX + getScrollX(), 0, (int) mMoveLength, 0, 1000);
+////                invalidate();
+//
+//                break;
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mGestureDetector.onTouchEvent(event)) {
+            return true;
+        }
+
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_MOVE:
+
+                mMoveLength += event.getX() - mLastMoveX;
+                mLastMoveY = event.getY();
+                mLastMoveX = event.getX();
+//                checkCirculation();
+                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                mLastMoveX = event.getX();
                 mLastMoveY = event.getY();
+                mLastMoveX = event.getX();
+//                moveToCenter();
                 break;
         }
-        return super.onTouchEvent(event);
+
+        return true;
+
+//        switch (event.getAction())
+//
+//        {
+//            case MotionEvent.ACTION_DOWN:
+//                mLastMoveY = event.getY();
+//                mLastMoveX = event.getX();
+//                break;
+//
+//            case MotionEvent.ACTION_MOVE:
+//                mMoveLength = event.getX() - mLastMoveX;
+//                mLastMoveX = event.getX();
+//                mLastMoveY = event.getY();
+//
+//
+//                if (getScrollX() + mMoveLength < leftBorder) {
+//                    scrollTo((int) leftBorder, 0);
+//                    return true;
+//                }
+//                if (getScrollX() + mMoveLength > rightBorder) {
+//                    scrollTo((int) rightBorder, 0);
+//                    return true;
+//                }
+//
+//                scrollBy((int) mMoveLength, 0);
+//                invalidate();
+//
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                mLastMoveX = event.getX();
+//                mLastMoveY = event.getY();
+//
+//                break;
+//        }
+//        return super.onTouchEvent(event);
     }
 
 
@@ -275,12 +358,54 @@ public class RulerView extends View {
         }
     }
 
+    public boolean isScrolling() {
+        return mIsFling || mIsMovingCenter;
+    }
+
     private class FlingOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private boolean mIsScrollingLastTime = false;
+
+        public boolean onDown(MotionEvent e) {
+            ViewParent parent = getParent();
+            if (parent != null) {
+                parent.requestDisallowInterceptTouchEvent(true);
+            }
+            mIsScrollingLastTime = isScrolling(); // 记录是否从滚动状态终止
+            // 点击时取消所有滚动效果
+            cancelScroll();
+            mLastMoveY = e.getY();
+            mLastMoveX = e.getX();
+            return true;
+        }
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, final float velocityY) {
             // 惯性滑动
             cancelScroll();
             fling(getScrollX(), velocityX);
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            mLastMoveY = e.getY();
+            mLastMoveX = e.getX();
+            float lastMove = mLastMoveX;
+            if (!isScrolling() && !mIsScrollingLastTime) {
+                if (lastMove >= mCenterPoint) {
+                    performClick();
+                } else if (lastMove < mCenterPoint) {
+//                    int move = mItemSize;
+//                    autoScrollTo(move, 150, sAutoScrollInterpolator, false);
+                } else if (lastMove > mCenterPoint) {
+//                    int move = -mItemSize;
+//                    autoScrollTo(move, 150, sAutoScrollInterpolator, false);
+                } /*else {
+                    moveToCenter();
+                }*/
+            } /*else {
+                moveToCenter();
+            }*/
             return true;
         }
     }
@@ -302,8 +427,8 @@ public class RulerView extends View {
     private void fling(float from, float vel) {
         mLastScrollX = (int) from;
         // 最多可以惯性滑动20个item
-        mScroller.fling((int) from, 0, (int) vel, 0, -50 * (int) mItemWidth,
-                50 * (int) mItemWidth, 0, 0);
+        mScroller.fling((int) from, 0, (int) vel, 0, (int) leftBorder,
+                (int) rightBorder, 0, 0);
         invalidate();
     }
 
