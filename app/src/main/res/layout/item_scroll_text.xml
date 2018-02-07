@@ -14,7 +14,7 @@
         app:spv_max_text_size="26dp"
         app:spv_min_text_size="17dp"
         app:spv_orientation="horizontal"
-        app:spv_visible_item_count="80" />
+        app:spv_visible_item_count="3" />
 
 
 </LinearLayout>

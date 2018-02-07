@@ -16,6 +16,7 @@ import android.view.ViewParent;
 import android.widget.Scroller;
 
 import com.sxt.chart.R;
+import com.sxt.chart.utils.LogUtil;
 import com.sxt.chart.utils.Px2DpUtil;
 
 import java.util.ArrayList;
@@ -50,38 +51,21 @@ public class RulerView extends View {
     private float startY;
     private float endX;
     private float endY;
-    private float mMoveLength;
+
     private float basePadding = 50;
     private float indicatorWidth = basePadding / 3;
     private float indicatorHigth = basePadding / 2;
     private Path indicatorPath;
 
-
     private GestureDetector mGestureDetector;
     private Scroller mScroller;
-    private int touchSlop;
     private float leftBorder, rightBorder;
-    private int rulerWidth;
-
-    private int mCenterPosition = -1; // 中间item的位置，0<=mCenterPosition＜mVisibleItemCount，默认为 mVisibleItemCount / 2
-    private int mCenterY; // 中间item的起始坐标y(不考虑偏移),当垂直滚动时，y= mCenterPosition*mItemHeight
-    private int mCenterX; // 中间item的起始坐标x(不考虑偏移),当垂直滚动时，x = mCenterPosition*mItemWidth
-    private int mCenterPoint; // 当垂直滚动时，mCenterPoint = mCenterY;水平滚动时，mCenterPoint = mCenterX
     private float mLastMoveY; // 触摸的坐标y
     private float mLastMoveX; // 触摸的坐标X
-    private boolean mIsMovingCenter; // 是否正在滑向中间
-    private boolean mIsFling; // 是否正在惯性滑动
+    private boolean isHorizontal = true;
 
-    // 可以把scroller看做模拟的触屏滑动操作，mLastScrollY为上次触屏滑动的坐标
-    private int mLastScrollY = 0; // Scroller的坐标y
-    private int mLastScrollX = 0; // Scroller的坐标x
-
-    private boolean mDisallowTouch = false; // 不允许触摸
-
-
-    private int page;
     private List<String> data;
-    private float minValue = 0, maxValue = 101;
+    private float minValue = 0, maxValue = 61;
     private float mItemWidth = Px2DpUtil.dip2px(getContext(), 6);
     private List<float[]> scaleLines = new ArrayList<>();
     private List<String[]> scaleTexts = new ArrayList<>();
@@ -109,31 +93,26 @@ public class RulerView extends View {
 
         mScroller = new Scroller(getContext());
         mGestureDetector = new GestureDetector(getContext(), new FlingOnGestureListener());
-        touchSlop = ViewConfiguration.get(getContext()).getScaledPagingTouchSlop();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        rulerWidth = (int) ((maxValue - minValue - 1) * mItemWidth);
-        if (rulerWidth < widthMeasureSpec) {
-            rulerWidth = widthMeasureSpec;
-        }
-        setMeasuredDimension(rulerWidth, heightMeasureSpec);
+//        rulerWidth = (int) ((maxValue - minValue - 1) * mItemWidth);
+//        if (rulerWidth < widthMeasureSpec) {
+//            rulerWidth = widthMeasureSpec;
+//        }
+//        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
-            startX = getPaddingLeft() + basePadding;
+            startX = getPaddingLeft();
             startY = getMeasuredHeight() - getPaddingBottom();
             endX = getMeasuredWidth() - getPaddingRight();
             endY = getPaddingTop() + basePadding;
-            page = (int) (rulerWidth / (endX - startX));
-
-            leftBorder = startX - (endX - startX) / 2;
-            rightBorder = startX + rulerWidth;
         }
     }
 
@@ -159,20 +138,6 @@ public class RulerView extends View {
     private void drawIndicator(Canvas canvas) {
         //初始化时，将指示器绘制在中间位置
         if (scaleLines.size() > 0) {
-//            if (mLastMoveX == 0.0) {
-//                int index = scaleLines.size() / 2;
-//                float[] floats = scaleLines.get(index);
-//                canvas.drawLine(floats[0], floats[1], floats[2], floats[3], indicatorPaint);
-//                indicatorPath.reset();
-//                indicatorPath.moveTo(floats[0], floats[1]);
-//                indicatorPath.lineTo(floats[0] + indicatorWidth, floats[1] - indicatorHigth);
-//                indicatorPath.lineTo(floats[0] - indicatorWidth, floats[1] - indicatorHigth);
-//                indicatorPath.close();
-//                canvas.drawPath(indicatorPath, indicatorPaint);
-//                if (onSelectChangeListener != null) {
-//                    onSelectChangeListener.onSelectChange(this, (floats[0] - leftBorder) / mItemWidth);
-//                }
-//            } else {
             //查找触摸位置
             float[] xy = getOnTouch();
             canvas.drawLine(xy[0], xy[1], xy[2], xy[3], indicatorPaint);
@@ -183,9 +148,8 @@ public class RulerView extends View {
             indicatorPath.close();
             canvas.drawPath(indicatorPath, indicatorPaint);
             if (onSelectChangeListener != null) {
-                onSelectChangeListener.onSelectChange(this, (xy[0] - leftBorder) / mItemWidth);
+                onSelectChangeListener.onSelectChange(this, (xy[0]) / mItemWidth);
             }
-//            }
         }
     }
 
@@ -211,6 +175,8 @@ public class RulerView extends View {
                 }
                 scaleLines.add(pts);//记录刻度坐标
             }
+            leftBorder = scaleLines.get(scaleLines.size() - 1)[0] - (scaleLines.get(scaleLines.size() - 1)[0] - scaleLines.get(0)[0]) / 2;
+            rightBorder = endX + (scaleLines.get(scaleLines.size() - 1)[0] - scaleLines.get(0)[0]) / 2;
         } else {
             for (int i = 0; i < scaleLines.size(); i++) {
                 canvas.drawLine(scaleLines.get(i)[0], scaleLines.get(i)[1], scaleLines.get(i)[2], scaleLines.get(i)[3], scalePaint);
@@ -290,23 +256,28 @@ public class RulerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         if (mGestureDetector.onTouchEvent(event)) {
             return true;
         }
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-
-                mMoveLength += event.getX() - mLastMoveX;
+//                if (mScroller.getCurrX() < leftBorder) {
+//                    scrollTo((int) leftBorder, mScroller.getCurrY());
+//                    return true;
+//                } else if (mScroller.getCurrX() > rightBorder) {
+//                    scrollTo((int) rightBorder, mScroller.getCurrY());
+//                    return true;
+//                }
+                scrollBy((int) (event.getX() - mLastMoveX), 0);
                 mLastMoveY = event.getY();
                 mLastMoveX = event.getX();
-//                checkCirculation();
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 mLastMoveY = event.getY();
                 mLastMoveX = event.getX();
-//                moveToCenter();
                 break;
         }
 
@@ -348,18 +319,21 @@ public class RulerView extends View {
 //        return super.onTouchEvent(event);
     }
 
-
     @Override
     public void computeScroll() {
         super.computeScroll();
         if (mScroller.computeScrollOffset()) {//平滑移动
-            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            /*if (mScroller.getCurrX() < leftBorder) {
+                scrollTo((int) leftBorder, mScroller.getCurrY());
+                cancelScroll();
+            } else if (mScroller.getCurrX() > rightBorder) {
+                scrollTo((int) rightBorder, mScroller.getCurrY());
+                cancelScroll();
+            } else {*/
+                scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+//            }
             invalidate();
         }
-    }
-
-    public boolean isScrolling() {
-        return mIsFling || mIsMovingCenter;
     }
 
     private class FlingOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -370,7 +344,6 @@ public class RulerView extends View {
             if (parent != null) {
                 parent.requestDisallowInterceptTouchEvent(true);
             }
-            mIsScrollingLastTime = isScrolling(); // 记录是否从滚动状态终止
             // 点击时取消所有滚动效果
             cancelScroll();
             mLastMoveY = e.getY();
@@ -390,22 +363,7 @@ public class RulerView extends View {
         public boolean onSingleTapUp(MotionEvent e) {
             mLastMoveY = e.getY();
             mLastMoveX = e.getX();
-            float lastMove = mLastMoveX;
-            if (!isScrolling() && !mIsScrollingLastTime) {
-                if (lastMove >= mCenterPoint) {
-                    performClick();
-                } else if (lastMove < mCenterPoint) {
-//                    int move = mItemSize;
-//                    autoScrollTo(move, 150, sAutoScrollInterpolator, false);
-                } else if (lastMove > mCenterPoint) {
-//                    int move = -mItemSize;
-//                    autoScrollTo(move, 150, sAutoScrollInterpolator, false);
-                } /*else {
-                    moveToCenter();
-                }*/
-            } /*else {
-                moveToCenter();
-            }*/
+            performClick();
             return true;
         }
     }
@@ -416,8 +374,6 @@ public class RulerView extends View {
 
     // 平滑滚动
     private void scroll(float from, int to) {
-        mLastScrollX = (int) from;
-        mIsMovingCenter = true;
         mScroller.startScroll((int) from, 0, 0, 0);
         mScroller.setFinalX(to);
         invalidate();
@@ -425,10 +381,8 @@ public class RulerView extends View {
 
     // 惯性滑动，
     private void fling(float from, float vel) {
-        mLastScrollX = (int) from;
-        // 最多可以惯性滑动20个item
-        mScroller.fling((int) from, 0, (int) vel, 0, (int) leftBorder,
-                (int) rightBorder, 0, 0);
+        mScroller.fling((int) from, 0, (int) vel, 0, (int) (-100*mItemWidth),
+                (int) (100*mItemWidth), 0, 0);
         invalidate();
     }
 
@@ -448,7 +402,8 @@ public class RulerView extends View {
                 }
             }
         }
-        return scaleLines.get(scaleLines.size() / 2);
+        return scaleLines.get(0);
+//        return scaleLines.get(scaleLines.size() / 2);
     }
 
     public void setOnSelectChangeListener(OnSelectChangeListenrer onSelectChangeListener) {
