@@ -351,6 +351,7 @@ public class RulerView extends View {
             return true;
         }
 
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, final float velocityY) {
             // 惯性滑动
