@@ -49,6 +49,8 @@ public class ScrollTextActivity extends BaseActivity {
                 select.setText(String.valueOf(selectValue));
             }
         });
+        rulerView.setData(100, 250);
+        rulerView.setSelectValue(180);
     }
 
 }
