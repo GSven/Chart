@@ -5,7 +5,7 @@
     android:padding="30dp"
     android:scrollbars="none">
 
-    <com.sxt.chart.view.RulerView
+    <com.sxt.chart.view.RulerViewLast
         android:id="@+id/rulerView"
         android:layout_width="110dp"
         android:layout_height="300dp"
@@ -13,7 +13,7 @@
         android:longClickable="true">
 
 
-    </com.sxt.chart.view.RulerView>
+    </com.sxt.chart.view.RulerViewLast>
 
 
 </FrameLayout>

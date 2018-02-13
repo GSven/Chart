@@ -35,31 +35,78 @@
             android:textColor="@color/main_blue"
             android:textSize="20dp" />
 
-        <include layout="@layout/item_ruler" />
-
-        <com.sxt.chart.view.RuleView
-            android:visibility="gone"
-            android:id="@+id/ruleView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-
-        <com.sxt.chart.view.MyHorizontalScrollView
-            android:visibility="gone"
-            android:id="@+id/hor_scrollview"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            android:scrollbars="none">
-
-            <com.sxt.chart.view.RuleView
-                android:id="@+id/rule_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="-20dp" />
-        </com.sxt.chart.view.MyHorizontalScrollView>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="32dp"
+                    android:text="体重"
+                    android:textColor="#303030"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <com.sxt.chart.view.RulerViewLast
+                android:id="@+id/rulerView_weight"
+                android:layout_width="120dp"
+                android:layout_height="300dp"
+                android:layout_gravity="right|center_vertical"
+                app:isVertical="true"
+                app:lineColor="@color/text_color_gray_3"
+                app:lineMaxHeight="20dp"
+                app:lineMidHeight="13dp"
+                app:lineMinHeight="8dp"
+                app:lineSpaceWidth="6dp"
+                app:lineWidth="1dp"
+                app:maxValue="300"
+                app:minValue="100"
+                app:perValue="1"
+                app:selectorValue="170"
+                app:textColor="@color/text_color_1"
+                app:textMarginTop="10dp"
+                app:textSize="15dp" />
 
 
+        </FrameLayout>
+
+
+        <com.sxt.chart.view.RulerViewLast
+            android:id="@+id/rulerView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            app:isVertical="false"
+            app:lineColor="@color/text_color_gray_3"
+            app:lineMaxHeight="20dp"
+            app:lineMidHeight="13dp"
+            app:lineMinHeight="8dp"
+            app:lineSpaceWidth="6dp"
+            app:lineWidth="1dp"
+            app:maxValue="200"
+            app:minValue="0"
+            app:perValue="1"
+            app:selectorValue="60"
+            app:textColor="@color/text_color_1"
+            app:textMarginTop="10dp"
+            app:textSize="15dp" />
     </LinearLayout>
 
 

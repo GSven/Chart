@@ -12,7 +12,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
-
 import com.sxt.chart.R;
 import com.sxt.chart.utils.Px2DpUtil;
 

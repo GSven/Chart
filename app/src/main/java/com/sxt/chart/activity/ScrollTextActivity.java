@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.sxt.chart.App;
 import com.sxt.chart.R;
 import com.sxt.chart.utils.ToastUtil;
-import com.sxt.chart.view.RulerView;
+import com.sxt.chart.view.RulerViewLast;
 import com.sxt.chart.view.ScrollPickerView;
 import com.sxt.chart.view.StringScrollPicker;
 
@@ -41,16 +41,32 @@ public class ScrollTextActivity extends BaseActivity {
             }
         });
 
-        RulerView rulerView = findViewById(R.id.rulerView);
-        rulerView.setOnSelectChangeListener(new RulerView.OnSelectChangeListenrer() {
+//        RulerView rulerViewLast = findViewById(R.id.rulerView);
+//        rulerViewLast.setOnSelectChangeListener(new RulerView.OnSelectChangeListenrer() {
+//            @Override
+//            public void onSelectChange(RulerView rulerView, float selectValue) {
+//                TextView select = findViewById(R.id.rulerSelect);
+//                select.setText(String.valueOf(selectValue));
+//            }
+//        });
+//        rulerViewLast.setData(100, 250);
+//        rulerViewLast.setSelectValue(180);
+
+
+        init();
+    }
+
+    private void init() {
+
+        final TextView mTvWeight = (TextView) findViewById(R.id.tv_weight);
+        RulerViewLast mRulerViewWeight = (RulerViewLast) findViewById(R.id.rulerView_weight);
+        mRulerViewWeight.setOnValueChangeListener(new RulerViewLast.OnValueChangeListener() {
             @Override
-            public void onSelectChange(RulerView rulerView, float selectValue) {
-                TextView select = findViewById(R.id.rulerSelect);
-                select.setText(String.valueOf(selectValue));
+            public void onValueChange(float value) {
+                mTvWeight.setText(value + "kg");
             }
         });
-        rulerView.setData(100, 250);
-        rulerView.setSelectValue(180);
+//        mRulerViewWeight.setValue(170.0f, 100.0f, 500.0f, 1.0f);
     }
 
 }

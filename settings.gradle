@@ -1,1 +1,1 @@
-include ':app', ':pulltorefresh', ':refresh-layout', 'suitLine:line'
+include ':app', ':pulltorefresh', ':refresh-layout', 'suitLine:line', ':library'
