@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sxt.chart.R;
-import com.sxt.chart.chart.BeizerCurveLine;
-import com.sxt.chart.chart.ChartBean;
+import com.sxt.chart.view.chart.BeizerCurveLine;
+import com.sxt.chart.view.chart.ChartBean;
 import com.sxt.chart.utils.ArithTool;
 
 import java.util.ArrayList;

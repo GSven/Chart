@@ -5,7 +5,7 @@
     android:background="@color/main_body"
     android:orientation="vertical">
 
-    <com.sxt.chart.chart.CircleProgressView
+    <com.sxt.chart.view.chart.CircleProgressView
         android:id="@+id/chart_circle_progress"
         android:layout_width="wrap_content"
         android:layout_height="244dp"
@@ -15,5 +15,5 @@
         android:paddingLeft="8dp"
         android:paddingRight="2dp">
 
-    </com.sxt.chart.chart.CircleProgressView>
+    </com.sxt.chart.view.chart.CircleProgressView>
 </LinearLayout>

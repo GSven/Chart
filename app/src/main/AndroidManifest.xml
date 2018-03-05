@@ -3,6 +3,7 @@
     package="com.sxt.chart">
 
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -26,6 +27,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".activity.SplashActivity"
+            android:screenOrientation="nosensor"
+
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,8 +38,7 @@
         </activity>
 
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.WifiSettingActivity" />
-        <activity android:name=".activity.PullToRefreshActivity" />
+        <activity android:name=".activity.ChartsActivity" />
 
         <receiver
             android:name=".activity.WatchDogReceiver"
@@ -50,11 +52,11 @@
 
         </receiver>
 
-        <activity android:name=".activity.DragerActivity" />
-        <activity android:name=".activity.ViewTypeActivity" />
-        <activity android:name=".activity.ScoreMsgActivity" />
-        <activity android:name=".activity.SmartRefreshActivity"  />
-        <activity android:name=".activity.ScrollTextActivity"  />
+        <activity android:name=".activity.CropImgActivity" />
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
     </application>
 
 </manifest>

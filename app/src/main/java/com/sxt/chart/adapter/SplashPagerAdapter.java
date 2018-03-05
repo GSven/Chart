@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.sxt.chart.activity.MainActivity;
+import com.sxt.chart.base.BasePagerAdapter;
 
 import java.util.List;
 

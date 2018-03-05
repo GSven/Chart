@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.sxt.chart.adapter.BaseRecyclerAdapter;
+import com.sxt.chart.base.BaseRecyclerAdapter;
 
 /**
  * Created by izhaohu on 2018/1/19.
