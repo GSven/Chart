@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/suitLine/line/line.iml" filepath="$PROJECT_DIR$/suitLine/line/line.iml" />
       <module fileurl="file://$PROJECT_DIR$/refresh-layout/refresh-layout.iml" filepath="$PROJECT_DIR$/refresh-layout/refresh-layout.iml" />
-      <module fileurl="file://$PROJECT_DIR$/suitLine/suitLine.iml" filepath="$PROJECT_DIR$/suitLine/suitLine.iml" />
     </modules>
   </component>
 </project>

@@ -11,30 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <android.opengl.GLSurfaceView
+        android:id="@+id/gl_surfaceView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.sxt.banner.library.CycleViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <SeekBar
-            android:id="@+id/seekBar"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10"
-            android:progress="3" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <include layout="@layout/item_bottom_sheet" />
 </android.support.design.widget.CoordinatorLayout>
